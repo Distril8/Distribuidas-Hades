@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      >
+    <h:head>
+        <title>HADES CRUISE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="#{facesContext.externalContext.requestContextPath}/images/styles.css" rel="stylesheet"/>
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"/>
+    </h:head>
+    <h:body> 
+        <div id="page">
+            <div class="header">
+                <img src="#{facesContext.externalContext.requestContextPath}/images/HADES.png" height="100%" class="img-responsive" />
+            </div>
+            <div id="content">
+                <h:form>
+                    <p:menubar>
+                        <p:submenu label="Catalogos" icon="ui-icon-document">
+                            <p:menuitem value="Tipos de tours" action="tipoTour" />
+                            <p:menuitem value="Tipo de alimentaciones" action="tipoAlimentacion" />
+                            <p:menuitem value="Tipo de camarotes" action="tipoCamarote" />
+                            <p:menuitem value="Tipo valor" action="tipoValor" />
+                            <p:menuitem value="Menu Bar" action="menu" />
+                        </p:submenu>
+                        <p:submenu label="Cruceros y Tours" >
+                            <p:menuitem value="Crucero" action="crucero" />
+                            <p:menuitem value="Camarote" action="camarote" />
+                            <p:menuitem value="Tour" action="tour" /> 
+                            <p:menuitem value="Reserva" action="reserva" /> 
+                            <p:menuitem value="Registrar consumo" action="registrarConsumo" /> 
+                        </p:submenu>
+                        <p:submenu label="Clientes" >
+                            <p:menuitem value="Agregar cliente" action="cliente" />
+                        </p:submenu>
+                        <p:menuitem value="#{usuarioSesionBean.nombre}" url="#"/>
+                        <p:menuitem value="Salir" icon="ui-icon-extlink" action="#{indexBean.logout()}" />
+                    </p:menubar>
+                    <div class="body5">
+                        <div class="body6">
+                            <div class="main">
+                                <div class="wrapper">
+                                    <figure class="left"><img src="#{facesContext.externalContext.requestContextPath}/images/letter3.png" alt=""/></figure>
+                                    <h2> Bienvenidos </h2>
+                                    El sistema HADES gestiona la creación de reservas de una empresa de cruceros.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p:spacer height="10px"/>
+                    <ui:insert name="contenido">
+
+                    </ui:insert>
+                    <p>&nbsp;</p>
+                </h:form>
+            </div>
+            <div id="footer">
+                <div class="text-center center-block">
+                    <a href=""><i id="social-fb" class="fa fa-facebook-square fa-3x social"></i></a>
+                    <a href=""><i id="social-tw" class="fa fa-twitter-square fa-3x social"></i></a>
+                    <a href=""><i id="social-gp" class="fa fa-google-plus-square fa-3x social"></i></a>
+                    <a href=""><i id="social-em" class="fa fa-envelope-square fa-3x social"></i></a>
+                </div>
+                <div class="text-center center-block">
+                    <p class="txt-railway">Copyright © Hades Cruise Corp. 2018</p>
+                    <p class="txt-railway">NRC: 2434</p>
+                    <p class="txt-railway">Tutor: HENRY RAMIRO CORAL CORAL </p>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

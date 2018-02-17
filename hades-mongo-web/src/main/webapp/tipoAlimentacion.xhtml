@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Tipo Alimentaci&#243;n" style="width: 50%; margin: auto;">
+                <p:dataTable var="tipoAlimentacion" value="#{tipoAlimentacionBean.tiposAlimentacion}" 
+                             selectionMode="single" selection="#{tipoAlimentacionBean.tipoAlimentacionSel}" rowKey="#{tipoAlimentacion.codigo}">
+                    <p:ajax event="rowSelect" update="@form" />
+                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:column headerText="Codigo">
+                        <h:outputText value="#{tipoAlimentacion.codigo}" />
+                    </p:column>
+                    <p:column headerText="Descripcion">
+                        <h:outputText value="#{tipoAlimentacion.descripcion}" />
+                    </p:column>
+                </p:dataTable>
+                
+                <p:commandButton value="Agregar" actionListener="#{tipoAlimentacionBean.agregar()}" update="@form"/>
+                <p:commandButton id="modBtn" value="Modificar" actionListener="#{tipoAlimentacionBean.modificar()}" update="@form" disabled="#{tipoAlimentacionBean.tipoAlimentacionSel eq null}"/>
+                <p:commandButton value="Eliminar" actionListener="#{tipoAlimentacionBean.eliminar()}" update="@form" disabled="#{tipoAlimentacionBean.tipoAlimentacionSel eq null}" >
+                    <p:confirm header="Confirmaci&#243;n" message="Desea eliminar el tipo de alimentacion: #{tipoAlimentacionBean.tipoAlimentacionSel.descripcion}}" icon="ui-icon-alert" />
+                </p:commandButton>
+                <p:panel header="#{tipoAlimentacionBean.titulo} Tipo Alimentaci&#243;n" rendered="#{tipoAlimentacionBean.habilitaForm}">
+                    <p:panelGrid columns="3">
+                        <p:outputLabel for="codigo" value="C&#243;digo" />
+                        <p:inputText id="codigo" value="#{tipoAlimentacionBean.tipoAlimentacion.codigo}" disabled="#{tipoAlimentacionBean.enModificar}" required="true" requiredMessage="Debe ingresar el codigo"/>
+                        <p:message for="codigo" />
+                        <p:outputLabel for="descripcion" value="Descripci&#243;n" />
+                        <p:inputText id="descripcion" value="#{tipoAlimentacionBean.tipoAlimentacion.descripcion}"  required="true" requiredMessage="Debe ingresara la descripcion"/>
+                        <p:message for="descripcion" />
+                    </p:panelGrid>
+                    <p:commandButton value="Aceptar" actionListener="#{tipoAlimentacionBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{tipoAlimentacionBean.cancelar}" update="@form" immediate="true"/>
+
+                </p:panel>
+
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </ui:define>
+    </ui:composition>
+</html>

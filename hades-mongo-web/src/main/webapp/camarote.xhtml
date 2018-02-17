@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Administraci&#243;n de Camarote" style="width: 80%; margin: auto;">
+                <p:panel id="buscPnl" header="B&#250;squeda">
+                    <p:panelGrid columns="2" style="margin-top:10px">
+                        <p:outputLabel for="cruceroCmb" value="Crucero:" />
+                        <p:selectOneMenu id="cruceroCmb" value="#{camaroteAdminBean.cruceroBusqueda}" rendered="true">
+                            <f:selectItems var="crucero" value="#{camaroteAdminBean.cruceros}" itemLabel="#{crucero.nombre}" itemValue="#{crucero.codigo}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel for="tiposCamaroteCmb" value="Tipo de Camarote:" />
+                        <p:selectOneMenu id="tiposCamaroteCmb" value="#{camaroteAdminBean.tipoCamaroteBusqueda}">
+                            <f:selectItems var="tipoCamarote" value="#{camaroteAdminBean.tiposCamarote}" itemLabel="#{tipoCamarote.nombre}" itemValue="#{tipoCamarote.codigo}" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:spacer height="10px"/>
+                    <p:commandButton id="buscarCmd" value="Buscar"  actionListener="#{camaroteAdminBean.buscar()}" update="@form" />
+                </p:panel>
+                <p:panel id="listCamarotePnl" header="Lista de Camarotes">
+                    <p:dataTable id="camarotesTbl" var="camarote" value="#{camaroteAdminBean.camarotes}" 
+                                 selectionMode="single" selection="#{camaroteAdminBean.camaroteSel}" rowKey="#{camarote.id}">
+                        <p:ajax event="rowSelect" update="camarotesTbl" />
+                        <p:ajax event="rowUnselect" update="camarotesTbl" />
+                        <p:column headerText="N&#250;mero" sortBy="#{camarote.numero}">
+                            <h:outputText value="#{camarote.numero}" />
+                        </p:column>
+                        <p:column headerText="Capacidad" sortBy="#{camarote.capacidad}">
+                            <h:outputText value="#{camarote.capacidad}" />
+                        </p:column>
+                        <p:column headerText="Ubicaci&#243;n" sortBy="#{camarote.ubicacion}">
+                            <h:outputText value="#{camarote.ubicacion}" >
+                                <f:convertNumber minFractionDigits="2" maxFractionDigits="2" currencySymbol="$"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

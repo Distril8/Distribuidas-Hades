@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantillaExterna.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Inicio de Sesi&#243;n" style="width: 30%; margin: auto;">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="usuario" value="Usuario" />
+                    <p:inputText id="usuario" value="#{indexBean.codigoUsuario}" required="true" 
+                                 maxlength="15" requiredMessage="Debe ingresar el usuario" />
+                    <p:outputLabel for="clave" value="Contraseña" />
+                    <p:password id="clave" value="#{indexBean.clave}" required="true" 
+                                maxlength="15" requiredMessage="Debe ingresar la contraseña"/>
+                </p:panelGrid>
+                <p:commandButton value="Aceptar" action="#{indexBean.login()}" ajax="false"/>
+            </p:panel>
+            <p:messages globalOnly="true" showDetail="true" severity="error" />
+        </ui:define>
+    </ui:composition>
+</html>

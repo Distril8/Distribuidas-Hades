@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Crucero" style="width: 50%; margin: auto;">
+                <p:dataTable var="crucero" value="#{cruceroBean.cruceros}" 
+                             selectionMode="single" selection="#{cruceroBean.cruceroSel}" rowKey="#{crucero.id}">
+                    <p:ajax event="rowSelect" update="@form" />
+                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:column headerText="Registro">
+                        <h:outputText value="#{crucero.registro}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{crucero.nombre}" />
+                    </p:column>
+                    <p:column headerText="Tipo Crucero">
+                        <h:outputText value="#{crucero.tipo.texto}" />
+                    </p:column>
+                    <p:column headerText="Capacidad">
+                        <h:outputText value="#{crucero.capacidad}" />
+                    </p:column>
+                </p:dataTable>
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:commandButton value="Agregar" actionListener="#{cruceroBean.agregar()}" update="@form"/>
+                <p:commandButton id="modBtn" value="Modificar" actionListener="#{cruceroBean.modificar()}" update="@form" disabled="#{cruceroBean.cruceroSel eq null}"/>
+                <p:commandButton value="Eliminar" actionListener="#{cruceroBean.eliminar()}" update="@form" disabled="#{cruceroBean.cruceroSel eq null}">
+                    <p:confirm header="Confirmaci&#243;n" message="Desea eliminar el crucero de nombre: #{cruceroBean.cruceroSel.nombre}" icon="ui-icon-alert" />
+                </p:commandButton>
+                <p:panel header="#{cruceroBean.titulo} Crucero" visible="#{cruceroBean.habilitaForm}">
+                    <p:panelGrid columns="2">
+                       <p:outputLabel for="nombre" value="Nombre" />
+                        <p:inputTextarea id="nombre" value="#{cruceroBean.crucero.nombre}" rows="2" cols="20" />
+                        <p:outputLabel for="tipo" value="Tipo Crucero" />
+                        <h:selectOneMenu value="#{cruceroBean.crucero.tipo}" style="background-color: black" >
+                            <f:selectItems id="tipo" value="#{cruceroBean.tiposCrucero}" var="tipoCrucero" itemValue="#{tipoCrucero}" itemLabel="#{tipoCrucero.texto}"  />                          
+                        </h:selectOneMenu>
+                        <p:outputLabel for="capacidad" value="Capacidad" />
+                        <p:inputText id="capacidad" value="#{cruceroBean.crucero.capacidad}"  />
+                    </p:panelGrid>
+                    <p:commandButton value="Aceptar" actionListener="#{cruceroBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{cruceroBean.cancelar}" update="@form" />
+                </p:panel>
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Tours" style="width: 80%; margin: auto;">
+                <p:panel id="buscPnl" header="B&#250;squeda">
+                    <p:panelGrid columns="4" style="margin-top:10px">
+                        <p:outputLabel for="filtroCmb" value="Buscar:" />
+                        <p:selectOneMenu id="filtroCmb" value="#{tourBean.filtro}" required="true"  valueChangeListener="#{tourBean.cambiarFiltro()}" >
+                            <p:ajax update="@form"/>
+                            <f:selectItem itemLabel="Tipo Tour" itemValue="TIP" />
+                            <f:selectItem itemLabel="Fechas" itemValue="FEC" />
+                        </p:selectOneMenu>
+                        <p:selectOneMenu id="tiposTourCmb" value="#{tourBean.tipoTourBusqueda}" rendered="#{tourBean.enBusquedaPorTipo}">
+                            <f:selectItems var="tipoTour" value="#{tourBean.tiposTours}" itemLabel="#{tipoTour.nombre}" itemValue="#{tipoTour.codigo}" />
+                        </p:selectOneMenu>
+                        <p:calendar id="fechaInicioCal" value="#{tourBean.fechaInicioBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not tourBean.enBusquedaPorTipo}" />
+                        <p:calendar id="fechaFinCal" value="#{tourBean.fechaFinBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not tourBean.enBusquedaPorTipo}" />
+                    </p:panelGrid>
+                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{tourBean.buscar()}" update="@form" />
+
+                </p:panel>
+                <p:dataTable id="toursTbl" var="tour" value="#{tourBean.tours}"
+                             selectionMode="single" selection="#{tourBean.tourSel}" rowKey="#{tour.codigo}">
+                    <p:ajax event="rowSelect" update="@form" />
+                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:column headerText="C&#243;digo">
+                        <h:outputText value="#{tour.codigo}" />
+                    </p:column>
+                    <p:column headerText="Tipo Tour">
+                        <h:outputText value="#{tour.tipoTour.nombre}" />
+                    </p:column>
+                    <p:column headerText="Crucero">
+                        <h:outputText value="#{tour.crucero.nombre}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{tour.nombre}" />
+                    </p:column>
+                    <p:column headerText="Duraci&#243;n">
+                        <h:outputText value="#{tour.duracion}" />
+                    </p:column>
+                    <p:column headerText="Fecha Inicio">
+                        <h:outputText value="#{tour.fechaInicio}" styleClass="date">
+                            <f:convertDateTime pattern=" MM/d/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Fecha Fin">
+                        <h:outputText value="#{tour.fechaFin}" styleClass="date">
+                            <f:convertDateTime pattern=" MM/d/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Puerto Embarque">
+                        <h:outputText value="#{tour.puertoEmbarque}" />
+                    </p:column>
+                    <p:column headerText="Puerto Desembarque">
+                        <h:outputText value="#{tour.puertoDesembarque}" />
+                    </p:column>
+                    <p:column headerText="Precio base">
+                        <h:outputText value="#{tour.precioBase}" />
+                    </p:column>
+                    <p:column headerText="Porcentaje Men&#250;">
+                        <h:outputText value="#{tour.porcentajeMenu}" />
+                    </p:column>
+                </p:dataTable>
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:commandButton value="Agregar" actionListener="#{tourBean.agregar()}" update="@form"/>
+                <p:commandButton id="modBtn" value="Modificar" actionListener="#{tourBean.modificar()}" update="@form" disabled="#{tourBean.tourSel eq null}"/>
+                <p:commandButton value="Eliminar" actionListener="#{tourBean.eliminar()}" update="@form" disabled="#{tourBean.tourSel eq null}" >
+                    <p:confirm header="Confirmaci&#243;n" message="Desea eliminar el Tour: #{tourBean.tourSel.nombre}}" icon="ui-icon-alert" />
+                </p:commandButton>
+                <p:panel header="#{tourBean.titulo} Tipo Tour" visible="#{tourBean.habilitaForm}">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="codigo" value="C&#243;digo" />
+                        <p:inputText id="codigo" value="#{tourBean.tour.codigo}" disabled="true" />
+                        <p:outputLabel for="tipoTourCmb" value="Tipo Tour"/>
+                        <p:selectOneMenu id="tipoTourCmb" value="#{tourBean.tour.tipoTour.codigo}" style="width:175px">
+                            <f:selectItems var="tipoTour" value="#{tourBean.tiposTours}" itemLabel="#{tipoTour.nombre}" itemValue="#{tipoTour.codigo}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="cruceroCmb" value="Crucero"/>
+                        <p:selectOneMenu id="cruceroCmb" value="#{tourBean.tour.crucero.codigo}" style="width:175px">
+                            <f:selectItems var="crucero" value="#{tourBean.cruceros}" itemLabel="#{crucero.nombre}" itemValue="#{crucero.codigo}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="nombre" value="Nombre" />
+                        <p:inputText id="nombre" value="#{tourBean.tour.nombre}"  />
+                        <p:outputLabel for="duracion" value="Duraci&#243;n" />
+                        <p:inputText id="duracion" value="#{tourBean.tour.duracion}"  />
+                        <p:outputLabel for="fechaIn" value="Fecha Inicio"  />
+                        <p:calendar id="fechaIn" value="#{tourBean.tour.fechaInicio}" showOn="button"  />
+                        <p:outputLabel for="fechaFin" value="Fecha Fin"  />
+                        <p:calendar id="fechaFin" value="#{tourBean.tour.fechaFin}" showOn="button"  />
+                        <p:outputLabel for="puertoEm" value="Puerto Embarque" />
+                        <p:inputText id="puertoEm" value="#{tourBean.tour.puertoEmbarque}"  />
+                        <p:outputLabel for="puertoDe" value="Puerto Desembarque" />
+                        <p:inputText id="puertoDe" value="#{tourBean.tour.puertoDesembarque}"  />
+                        <p:outputLabel for="precioBase" value="Precio base" />
+                        <p:inputText id="precioBase" value="#{tourBean.tour.precioBase}"  />
+                        <p:outputLabel for="porcentajeMenu" value="Porcentaje Menu" />
+                        <p:inputText id="porcentajeMenu" value="#{tourBean.tour.porcentajeMenu}"  />
+                    </p:panelGrid>
+                    <p:commandButton value="Aceptar" actionListener="#{tourBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{tourBean.cancelar}" update="@form" />
+                </p:panel>
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </ui:define>
+    </ui:composition>
+</html>

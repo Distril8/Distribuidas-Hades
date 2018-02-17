@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Agregar Cliente" style="width: 50%; margin: auto;">
+                <p:dataTable var="cliente" value="#{clienteBean.clientes}"
+                             selectionMode="single" selection="#{clienteBean.clienteSel}" rowKey="#{cliente.id}">
+                    <p:ajax event="rowSelect" update="@form" />
+                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:column headerText="Identificaci&#243;n">
+                        <h:outputText value="#{cliente.identificacion}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{cliente.nombre}" />
+                    </p:column>
+                    <p:column headerText="Apellido">
+                        <h:outputText value="#{cliente.apellido}" />
+                    </p:column>
+                    <p:column headerText="Direcci&#243;n">
+                        <h:outputText value="#{cliente.direccion}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Agregar" actionListener="#{clienteBean.agregar()}" update="@form"/>
+                <p:commandButton value="Modificar" actionListener="#{clienteBean.modificar()}" update="@form" disabled="#{clienteBean.clienteSel eq null}"/>
+                <p:panel header="#{clienteBean.titulo}cliente" rendered="#{clienteBean.habilitaForm}">
+                    <p:panelGrid columns="3">
+                        <p:outputLabel for="identificacion" value="Identificaci&#243;n" />
+                        <p:inputText id="identificacion" value="#{clienteBean.cliente.identificacion}" disabled="#{clienteBean.enModificar}"  requiredMessage="Debe ingresar el codigo"/>
+                        <p:message for="identificacion" />
+                        <p:outputLabel for="tipoIdentificacion" value="Tipo Identificaci&#243;n" />
+                        <p:selectOneMenu id="tipoIdentificacion" value="#{clienteBean.cliente.tipoIdentificacion}" disabled="#{clienteBean.enModificar}" style="width:175px">
+                            <f:selectItem itemLabel="Seleccionar uno" itemValue="" />
+                            <f:selectItem itemLabel="Cedula" itemValue="CED" />
+                            <f:selectItem itemLabel="RUC" itemValue="RUC" />
+                        </p:selectOneMenu>
+                        <p:message for="tipoIdentificacion" />
+                        <p:outputLabel for="nombre" value="Nombre" />
+                        <p:inputText id="nombre" value="#{clienteBean.cliente.nombre}"  required="true" requiredMessage="Debe ingresara el nombre"/>
+                        <p:message for="nombre" />
+                        <p:outputLabel for="apellido" value="Apellido" />
+                        <p:inputText id="apellido" value="#{clienteBean.cliente.apellido}"  required="true" requiredMessage="Debe ingresara el apellido"/>
+                        <p:message for="apellido" />
+                        <p:outputLabel for="direccion" value="Direcci&#243;n" />
+                        <p:inputText id="direccion" value="#{clienteBean.cliente.direccion}"  required="true" requiredMessage="Debe ingresara la direccion"/>
+                        <p:message for="direccion" />
+                        <p:outputLabel for="pais" value="Pa&#237;s" />
+                        <p:inputText id="pais" value="#{clienteBean.cliente.pais}"  required="true" requiredMessage="Debe ingresara el pais"/>
+                        <p:message for="pais" />
+                        <p:outputLabel for="telefono" value="Tel&#233;fono" />
+                        <p:inputText id="telefono" value="#{clienteBean.cliente.telefono}"  required="true" requiredMessage="Debe ingresara el telefono"/>
+                        <p:message for="telefono" />
+                        <p:outputLabel for="correo" value="Correo" />
+                        <p:inputText id="correo" value="#{clienteBean.cliente.correoElectronico}"  required="true" requiredMessage="Debe ingresara el correo"/>
+                        <p:message for="correo" />
+                    </p:panelGrid>
+                    <p:commandButton value="Aceptar" actionListener="#{clienteBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{clienteBean.cancelar}" update="@form" immediate="true"/>
+                </p:panel>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

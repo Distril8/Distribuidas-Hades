@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel header="Tipo Valor" style="width: 50%; margin: auto;">
+                <p:dataTable var="tipoValor" value="#{tipoValorBean.tiposValor}" 
+                             selectionMode="single" selection="#{tipoValorBean.tipoValorSel}" rowKey="#{tipoValor.codigo}">
+                    <p:ajax event="rowSelect" update="@form" />
+                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:column headerText="C&#243;digo">
+                        <h:outputText value="#{tipoValor.codigo}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{tipoValor.nombre}" />
+                    </p:column>
+                    <p:column headerText="Descripci&#243;n">
+                        <h:outputText value="#{tipoValor.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Tipo Cobro">
+                        <h:outputText value="#{tipoValor.tipoCobro}" />
+                    </p:column>
+                    <p:column headerText="Orden">
+                        <h:outputText value="#{tipoValor.orden}" />
+                    </p:column>
+                </p:dataTable>
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:commandButton value="Agregar" actionListener="#{tipoValorBean.agregar()}" update="@form"/>   
+                <p:commandButton value="Modificar" actionListener="#{tipoValorBean.modificar()}" update="@form" disabled="#{tipoValorBean.tipoValorSel eq null}"/>
+                <p:commandButton value="Eliminar" actionListener="#{tipoValorBean.eliminar()}" update="@form" disabled="#{tipoValorBean.tipoValorSel eq null}" >
+                    <p:confirm header="Confirmaci&#243;n" message="Desea eliminar el tipo de Valor: #{tipoValorBean.tipoValorSel.nombre}}" icon="ui-icon-alert" />
+                </p:commandButton>
+                <p:panel header="#{tipoValorBean.titulo} Tipo Valor" visible="#{tipoValorBean.habilitaForm}">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="codigo" value="C&#243;digo" />
+                        <p:inputText id="codigo" value="#{tipoValorBean.tipoValor.codigo}" disabled="#{tipoValorBean.enModificar}"/>
+                        <p:outputLabel for="nombre" value="Nombre" />
+                        <p:inputText id="nombre" value="#{tipoValorBean.tipoValor.nombre}"  />
+                        <p:outputLabel for="descripcion" value="Descripci&#243;n" />
+                        <p:inputText id="descripcion" value="#{tipoValorBean.tipoValor.descripcion}"  />
+                        <p:outputLabel for="tipoCobro" value="Tipo Cobro" />
+                        <p:selectOneMenu id="tipoCobro" value="#{tipoValorBean.tipoValor.tipoCobro}" style="width:175px">
+                            <f:selectItem itemLabel="Seleccionar uno" itemValue="" />
+                            <f:selectItem itemLabel="Porcentaje" itemValue="POR" />
+                            <f:selectItem itemLabel="Valor" itemValue="VAL" />
+                        </p:selectOneMenu>
+                        <p:outputLabel for="orden" value="Orden" />
+                        <p:selectOneMenu id="orden" value="#{tipoValorBean.tipoValor.orden}" style="width:175px">
+                            <f:selectItem itemLabel="Seleccionar uno" itemValue="" />
+                            <f:selectItem itemLabel="Incremento" itemValue="INC" />
+                            <f:selectItem itemLabel="Decremento" itemValue="DEC" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton value="Aceptar" actionListener="#{tipoValorBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{tipoValorBean.cancelar}" update="@form" />
+                </p:panel>
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </ui:define>
+    </ui:composition>
+</html>

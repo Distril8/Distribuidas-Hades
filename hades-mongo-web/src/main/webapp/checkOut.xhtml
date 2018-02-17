@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Check Out" style="width: 50%; margin: auto;">
+                <p:panel id="clientePnl" header="Cliente">
+                    <p:outputLabel for="identificacion" value="Identificacion:" />
+                    <p:inputText id="identificacion" value="#{checkOutBean.identificacionCliente}" required="true" >
+                    </p:inputText>
+                    <p:commandButton value="Buscar" actionListener="#{checkOutBean.buscar(checkOutBean.identificacionCliente)}" update="@form"/>    
+                    <p:panel id="mostrPnl" header="Tours de Cliente" rendered="#{checkOutBean.enEncontrado}">
+                        <p:dataTable var="checkOut" value="#{checkOutBean.checkOut}" 
+                                     selectionMode="single" selection="#{checkOutBean.checkOutSel}" rowKey="#{checkOut.id}">
+                            <p:ajax event="rowSelect" update="@form" />
+                            <p:ajax event="rowUnselect" update="@form" />
+                            <p:column headerText="Codigo Reserva" style="width: 25%">
+                                <h:outputText value="#{checkOutBean.reserva.codigo}" />
+                            </p:column>
+                            <p:column headerText="Tour" style="width: 25%">
+                                <h:outputText value="#{checkOutBean.tour.nombre}" />
+                            </p:column>
+                            <p:column headerText="Total Pagar Consumos" style="width: 25%">
+                                <h:outputText value="#{checkOutBean.checkOut.totalConsumos}" />
+                            </p:column>
+                            <p:column headerText="Total Pagar Equipaje" style="width: 25%">
+                                <h:outputText value="#{checkOutBean.checkOut.totalEquipaje}" />
+                            </p:column>
+                            <p:column headerText="Estado" style="width: 25%">
+                                <h:outputText value="#{checkOutBean.checkOut.estado}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton id="detConsumos" value="Detalle Consumos" actionListener="#{checkOutBean.mostrarConsumos()}" update="@form" disabled="#{checkOutBean.checkOutSel eq null}"/>      
+                        <p:commandButton id="detEquipaje" value="Detalle Equipaje" actionListener="#{checkOutBean.mostrarEquipaje()}" update="@form" disabled="#{checkOutBean.checkOutSel eq null}"/>      
+                        <p:commandButton id="facturar" value="Facturar" actionListener="#{checkOutBean.facturar()}" update="@form" disabled="#{checkOutBean.checkOutSel eq null}"/>      
+                    </p:panel>
+                </p:panel>
+                <p:panel header="Detalle de Consumos" visible="#{checkOutBean.habilitaFormConsumos}">
+                    <p:dataTable var="consumo" value="#{checkOutBean.consumo}" rowKey="#{consumo.codigo}">
+                        <p:column headerText="Codigo Reserva" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.reserva.codigo}" />
+                        </p:column>
+                        <p:column headerText="Tour" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.tour.nombre}" />
+                        </p:column>
+                        <p:column headerText="Consumo" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.consumo.menu.nombre}" />
+                        </p:column>
+                        <p:column headerText="Cantidad" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.consumo.cantidad}" />
+                        </p:column>
+                        <p:column headerText="Valor" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.consumo.menu.precio}" />
+                        </p:column>
+                        <p:column headerText="Total" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.consumo.valor}" />
+                        </p:column>
+                         <p:column headerText="Fecha Consumo" style="width: 25%">
+                             <h:outputText value="#{checkOutBean.consumo.fecha}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel> 
+                <p:panel header="Detalle de Equipaje" visible="#{checkOutBean.habilitaFormEquipaje}">
+                    <p:dataTable var="turista" value="#{checkOutBean.reserva.codigo}" rowKey="#{turista.id}">
+                        <p:column headerText="Codigo Reserva" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.reserva.codigo}" />
+                        </p:column>
+                        <p:column headerText="Turista" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.turista.nombre}" />
+                        </p:column>
+                        <p:column headerText="Peso Equipaje" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.turista.pesoMaleta}" />
+                        </p:column>
+                        <p:column headerText="Valor a Pagar Equipaje" style="width: 25%">
+                            <h:outputText value="#{checkOutBean.turista.valorMaleta}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel> 
+            </p:panel>
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+        </ui:define>
+    </ui:composition>
+</html>
