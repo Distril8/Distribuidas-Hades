@@ -9,6 +9,22 @@
     <ui:composition template="/templates/plantilla.xhtml">
         <ui:define name="contenido">
             <p:panel id="mainPnl" header="Check Out" style="width: 50%; margin: auto;">
+                <p:panel id="buscPnl" header="B&#250;squeda">
+                    <p:panelGrid columns="4" style="margin-top:10px">
+                        <p:outputLabel for="filtroCmb" value="Buscar:" />
+                        <p:selectOneMenu id="filtroCmb" value="#{tourBean.filtro}" required="true"  valueChangeListener="#{tourBean.cambiarFiltro()}" >
+                            <p:ajax update="@form"/>
+                            <f:selectItem itemLabel="Tipo Tour" itemValue="TIP" />
+                            <f:selectItem itemLabel="Fechas" itemValue="FEC" />
+                        </p:selectOneMenu>
+                        <p:selectOneMenu id="tiposTourCmb" value="#{tourBean.tipoTourBusqueda}" rendered="#{tourBean.enBusquedaPorTipo}">
+                            <f:selectItems var="tipoTour" value="#{tourBean.tiposTours}" itemLabel="#{tipoTour.nombre}" itemValue="#{tipoTour.codigo}" />
+                        </p:selectOneMenu>
+                        <p:calendar id="fechaInicioCal" value="#{tourBean.fechaInicioBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not tourBean.enBusquedaPorTipo}" />
+                        <p:calendar id="fechaFinCal" value="#{tourBean.fechaFinBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not tourBean.enBusquedaPorTipo}" />
+                    </p:panelGrid>
+                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{tourBean.buscar()}" update="@form" />
+                </p:panel>
                 <p:panel id="clientePnl" header="Cliente">
                     <p:outputLabel for="identificacion" value="Identificacion:" />
                     <p:inputText id="identificacion" value="#{checkOutBean.identificacionCliente}" required="true" >

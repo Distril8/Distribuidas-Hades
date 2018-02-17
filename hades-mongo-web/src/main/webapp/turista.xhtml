@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Turista" style="width: 50%; margin: auto;">
+                <p:panel id="buscPnl" header="B&#250;squeda">
+                    <p:panelGrid columns="2" style="margin-top:10px">
+                        <p:outputLabel for="codigoReserva" value="C&#243;digo Reserva" />
+                        <p:inputText  value="#{turistaBean.auxBusqueda}" disabled="#{turistaBean.enModificar}" required="true" requiredMessage="Debe ingresara el parametro de busqueda"/>
+                    </p:panelGrid>
+                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{turistaBean.buscar()}" update="@form" />
+                </p:panel>
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:dataTable var="turista" value="#{turistaBean.turistas}"
+                             selectionMode="single" selection="#{turistaBean.turistaSel}" rowKey="#{turista.id}">
+                    <p:ajax event="rowSelect" update="@form" />
+                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:column headerText="Codigo Reserva">
+                        <h:outputText value="#{turista.codReserva}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{turista.nombre}" />
+                    </p:column>
+                    <p:column headerText="Identificacion">
+                        <h:outputText value="#{turista.identificacion}" />
+                    </p:column>
+                    <p:column headerText="Fecha Nacimiento">
+                        <h:outputText value="#{turista.fechaNacimiento}" />
+                    </p:column>
+                    <p:column headerText="Peso maleta">
+                        <h:outputText value="#{turista.pesoMaleta}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Agregar" actionListener="#{turistaBean.agregar()}" update="@form"/>
+                <p:commandButton value="Eliminar" actionListener="#{turistaBean.eliminar()}" update="@form" disabled="#{turistaBean.turistaSel eq null}" >
+                    <p:confirm header="Confirmaci&#243;n" message="Desea eliminar el Turista: #{turistaBean.turistaSel.nombre}}" icon="ui-icon-alert" />
+                </p:commandButton>
+                <p:panel header="Agregar Turista" rendered="#{turistaBean.habilitaForm}">
+                    <p:panelGrid columns="3">
+                        <p:outputLabel for="codigoReserva" value="C&#243;digo Reserva" />
+                        <p:inputText id="codigoReserva" value="#{turistaBean.turista.codReserva}"  required="true" requiredMessage="Debe ingresar el codigo de reserva"/>
+                        <p:message for="codigoReserva" />
+                        <p:outputLabel for="tipoIdentificacion" value="Tipo Identificaci&#243;n" />
+                        <p:inputText id="tipoIdentificacion" value="#{turistaBean.turista.tipoIdentificacion}" disabled="#{turistaBean.enModificar}" required="true" requiredMessage="Debe ingresara el tipo de identificacion"/>
+                        <p:message for="tipoIdentificacion" />
+                        <p:outputLabel for="identificacion" value="Identificaci&#243;n" />
+                        <p:inputText id="identificacion" value="#{turistaBean.turista.identificacion}" disabled="#{turistaBean.enModificar}" required="true" requiredMessage="Debe ingresar el codigo de turista"/>
+                        <p:message for="identificacion" />
+                        <p:outputLabel for="nombre" value="Nombre" />
+                        <p:inputText id="nombre" value="#{turistaBean.turista.nombre}"  required="true" requiredMessage="Debe ingresar nombre"/>
+                        <p:message for="nombre" />
+                        <p:outputLabel for="fechaNacimiento" value="Fecha Nacimiento" />
+                        <p:calendar id="fechaNacimiento" value="#{turistaBean.turista.fechaNacimiento}" showOn="button" pattern="MM/dd/yyyy"  required="true" requiredMessage="Debe ingresar fecha nacimiento"/>
+                        <p:message for="fechaNacimiento" />
+                        <p:outputLabel for="pesoMaleta" value="Peso Maleta" />
+                        <p:inputText id="pesoMaleta" value="#{turistaBean.turista.pesoMaleta}"  required="true" requiredMessage="Debe ingresar peso maleta"/>
+                        <p:message for="pesoMaleta" />
+                    </p:panelGrid>
+                    <p:commandButton value="Aceptar" actionListener="#{turistaBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{turistaBean.cancelar}" update="@form" immediate="true"/>
+                </p:panel>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

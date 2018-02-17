@@ -21,22 +21,28 @@
             <div id="content">
                 <h:form>
                     <p:menubar>
-                        <p:submenu label="Catalogos" icon="ui-icon-document">
+                        <p:submenu label="Cat&#225;logos" icon="ui-icon-document">
                             <p:menuitem value="Tipos de tours" action="tipoTour" />
                             <p:menuitem value="Tipo de alimentaciones" action="tipoAlimentacion" />
                             <p:menuitem value="Tipo de camarotes" action="tipoCamarote" />
                             <p:menuitem value="Tipo valor" action="tipoValor" />
-                            <p:menuitem value="Menu Bar" action="menu" />
+                            <p:menuitem value="Men&#250; Bar" action="menu" />
                         </p:submenu>
                         <p:submenu label="Cruceros y Tours" >
                             <p:menuitem value="Crucero" action="crucero" />
                             <p:menuitem value="Camarote" action="camarote" />
                             <p:menuitem value="Tour" action="tour" /> 
-                            <p:menuitem value="Reserva" action="reserva" /> 
-                            <p:menuitem value="Registrar consumo" action="registrarConsumo" /> 
+                        </p:submenu>
+                        <p:submenu label="Reserva" >
+                            <p:menuitem value="Registrar Reserva" action="reserva" />
+                            <p:menuitem value="Turista" action="turista" />
+                            <p:menuitem value="Registrar consumo" action="registrarConsumo" />
                         </p:submenu>
                         <p:submenu label="Clientes" >
                             <p:menuitem value="Agregar cliente" action="cliente" />
+                        </p:submenu>
+                        <p:submenu label="Check Out" >
+                            <p:menuitem value="checkOut" action="checkOut" />
                         </p:submenu>
                         <p:menuitem value="#{usuarioSesionBean.nombre}" url="#"/>
                         <p:menuitem value="Salir" icon="ui-icon-extlink" action="#{indexBean.logout()}" />

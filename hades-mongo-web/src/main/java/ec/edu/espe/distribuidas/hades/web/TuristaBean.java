@@ -10,12 +10,10 @@ package ec.edu.espe.distribuidas.hades.web;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
 import ec.edu.espe.distribuidas.hades.model.TuristaReserva;
 import ec.edu.espe.distribuidas.hades.service.ReservaService;
-import ec.edu.espe.distribuidas.hades.service.TuristaService;
+import ec.edu.espe.distribuidas.hades.service.TuristaReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
-
 import java.util.List;
-import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -23,31 +21,41 @@ import javax.inject.Named;
 
 /**
  *
- * @author js_cm
+ * @author jubenavides
  */
 @Named
 @ViewScoped
 public class TuristaBean extends BaseBean implements Serializable {
     
+    private String auxBusqueda;
     private List<TuristaReserva> turistas;
-    private List<TuristaReserva> turistaTemp;
     private TuristaReserva turista;
-    private Reserva reserva;
     private TuristaReserva turistaSel;
-
+    private Reserva reserva;
+    
+    @Inject
+    private TuristaReservaService turistaReservaService;
     
     @Inject
     private ReservaService reservaService;
-    @Inject
-    private TuristaService turistaService;
+    
 
     @PostConstruct
     public void init() {
-        this.turistas = this.turistaService.obtenerTodos();
         this.turista = new TuristaReserva();
         this.reserva = new Reserva();
     }
 
+    public void buscar() {
+        this.reserva = this.reservaService.obtenerPorIdentificacion(auxBusqueda);
+        if (reserva != null) {
+            this.turistas = this.turistaReservaService.obtenerPorReserva(auxBusqueda);
+            if(turistas.isEmpty())
+                FacesUtil.addMessageInfo("No existen turistas registrados en la reserva");
+        } else {
+            FacesUtil.addMessageError(null, "No se encontró reserva, verifique el codigo");
+        }
+    }
 
     @Override
     public void agregar() {
@@ -60,12 +68,12 @@ public class TuristaBean extends BaseBean implements Serializable {
     public void modificar() {
         super.modificar();
         this.turista = new TuristaReserva();
-        this.turista.setIdentificacion(this.turistaSel.getIdentificacion());
+        this.turista.setCodReserva(this.turistaSel.getCodReserva());
         this.turista.setTipoIdentificacion(this.turistaSel.getTipoIdentificacion());
+        this.turista.setIdentificacion(this.turistaSel.getIdentificacion());
         this.turista.setNombre(this.turistaSel.getNombre());
         this.turista.setFechaNacimiento(this.turistaSel.getFechaNacimiento());
         this.turista.setPesoMaleta(this.turistaSel.getPesoMaleta());
-        this.turista.setCodReserva(this.turistaSel.getCodReserva());
     }
 
     @Override
@@ -80,65 +88,36 @@ public class TuristaBean extends BaseBean implements Serializable {
     }
 
     public void guardar() {
-        int a= new Random().nextInt(10000);
-       try {
-//            for (int i = 0; i < this.turistaTemp.size(); i++) {
-//                this.turistaTemp.get(i).setCodReserva(a);
-//                this.turistaService.crear(this.turistaTemp.get(i));
-//           }
-            
-//            this.reserva.setCodigo(Integer.toString(a));
-//            this.reservaService.crear(this.reserva);
-             this.turista.setCodigo(1);
-             this.turistaService.crear(this.turista);
-            FacesUtil.addMessageInfo("Se agreg\u00f3 el Turista: " + this.turista.getNombre());
-            
-            
+        try {
+            this.turistaReservaService.crear(this.turista);
+            FacesUtil.addMessageInfo("Se agrego el turista: " + this.turista.getNombre());
         } catch (Exception ex) {
-            FacesUtil.addMessageError(null, "Ocurrí\u00f3 un error al actualizar la informaci\u00f3n" + ex);
-            
-        }
-        super.reset();
-        this.turista = new TuristaReserva();
-        this.turistas = this.turistaService.obtenerTodos();
-    }
-
-    public void guardarTemp() {
-       try {
-            if (this.enAgregar) {
-            this.turista.setCodigo(new Random().nextInt(10000));
-            this.turistaTemp.add(turista);
-            FacesUtil.addMessageInfo("Se agreg\u00f3 el Turista: " + this.turista.getNombre());
-            } else {
-                this.turistaService.modificar(this.turista);
-                FacesUtil.addMessageInfo("Se modific\u00f3 el Turista: " + this.turista.getNombre());
-            }
-        } catch (Exception ex) {
-            System.out.println("Codigo"+ turistaTemp.get(0).getCodigo() );
             FacesUtil.addMessageError(null, "Ocurrí\u00f3 un error al actualizar la informaci\u00f3n");
         }
         super.reset();
         this.turista = new TuristaReserva();
-        this.turistas = this.turistaService.obtenerTodos();
-    }
-
-    public List<TuristaReserva> getTuristaTemp() {
-        return turistaTemp;
-    }
-
-    public void setTuristaTemp(List<TuristaReserva> turistaTemp) {
-        this.turistaTemp = turistaTemp;
+        this.turistas = this.turistaReservaService.obtenerTodos();
     }
     
+    public void eliminar(){
+        try{
+            this.turistaReservaService.eliminar(this.turistaSel.getId());
+            FacesUtil.addMessageInfo("Se elimino el turista: " + this.turistaSel.getNombre());
+        } catch (Exception ex) {
+             FacesUtil.addMessageError(null, "Ocurrí\u00f3 un error al actualizar la informaci\u00f3n");
+        }
+    }
+
+    public String getAuxBusqueda() {
+        return auxBusqueda;
+    }
+
+    public void setAuxBusqueda(String auxBusqueda) {
+        this.auxBusqueda = auxBusqueda;
+    }
     
-
-
     public List<TuristaReserva> getTuristas() {
         return turistas;
-    }
-
-    public void setTuristas(List<TuristaReserva> turistas) {
-        this.turistas = turistas;
     }
 
     public TuristaReserva getTurista() {
@@ -157,6 +136,12 @@ public class TuristaBean extends BaseBean implements Serializable {
         this.turistaSel = turistaSel;
     }
 
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
    
-    
 }

@@ -24,7 +24,6 @@
                         <p:calendar id="fechaFinCal" value="#{tourBean.fechaFinBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not tourBean.enBusquedaPorTipo}" />
                     </p:panelGrid>
                     <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{tourBean.buscar()}" update="@form" />
-
                 </p:panel>
                 <p:dataTable id="toursTbl" var="tour" value="#{tourBean.tours}"
                              selectionMode="single" selection="#{tourBean.tourSel}" rowKey="#{tour.codigo}">
