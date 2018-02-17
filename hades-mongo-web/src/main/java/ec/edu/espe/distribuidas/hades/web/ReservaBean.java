@@ -129,7 +129,7 @@ public class ReservaBean extends BaseBean implements Serializable {
     }
 
     public String generarCodigo(){
-        Integer codigo = this.reservaService.obtenerTodos().size();;
+        Integer codigo = this.reservaService.obtenerTodos().size()+1;
         String res="RS0";
         StringBuilder codigofinal = new StringBuilder();
         if (codigo==0) {
