@@ -9,24 +9,24 @@
     <ui:composition template="/templates/plantilla.xhtml">
         <ui:define name="contenido">
             <p:panel id="mainPnl" header="Registrar Consumos" style="width: 50%; margin: auto;">
-                <p:panel id="buscPnl" header="B&#250;squeda de Tour">
+                <p:panel id="buscPnl" header="B&#250;squeda de Tour" rendered="#{consumoBean.enMostrarTour}">
                     <p:panelGrid columns="4" style="margin-top:10px">
                         <p:outputLabel for="filtroCmb" value="Buscar:" />
-                        <p:selectOneMenu id="filtroCmb" value="#{tourBean.filtro}" required="true"  valueChangeListener="#{tourBean.cambiarFiltro()}" >
+                        <p:selectOneMenu id="filtroCmb" value="#{consumoBean.filtro}" required="true"  valueChangeListener="#{consumoBean.cambiarFiltro()}" >
                             <p:ajax update="@form"/>
                             <f:selectItem itemLabel="Tipo Tour" itemValue="TIP" />
                             <f:selectItem itemLabel="Fechas" itemValue="FEC" />
                         </p:selectOneMenu>
-                        <p:selectOneMenu id="tiposTourCmb" value="#{tourBean.tipoTourBusqueda}" rendered="#{tourBean.enBusquedaPorTipo}">
-                            <f:selectItems var="tipoTour" value="#{tourBean.tiposTours}" itemLabel="#{tipoTour.nombre}" itemValue="#{tipoTour.codigo}" />
+                        <p:selectOneMenu id="tiposTourCmb" value="#{consumoBean.tipoTourBusqueda}" rendered="#{consumoBean.enBusquedaPorTipo}">
+                            <f:selectItems var="tipoTour" value="#{consumoBean.tiposTours}" itemLabel="#{tipoTour.nombre}" itemValue="#{tipoTour.codigo}" />
                         </p:selectOneMenu>
-                        <p:calendar id="fechaInicioCal" value="#{tourBean.fechaInicioBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not tourBean.enBusquedaPorTipo}" />
-                        <p:calendar id="fechaFinCal" value="#{tourBean.fechaFinBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not tourBean.enBusquedaPorTipo}" />
+                        <p:calendar id="fechaInicioCal" value="#{consumoBean.fechaInicioBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not consumoBean.enBusquedaPorTipo}" />
+                        <p:calendar id="fechaFinCal" value="#{consumoBean.fechaFinBusqueda}" showOn="button" pattern="MM/dd/yyyy" rendered="#{not consumoBean.enBusquedaPorTipo}" />
                     </p:panelGrid>
-                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{tourBean.buscar()}" update="@form" />
+                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{consumoBean.buscar()}" update="@form" />
 
-                    <p:dataTable id="toursTbl" var="tour" value="#{tourBean.tours}"
-                                 selectionMode="single" selection="#{tourBean.tourSel}" rowKey="#{tour.codigo}">
+                    <p:dataTable id="toursTbl" var="tour" value="#{consumoBean.tours}"
+                                 selectionMode="single" selection="#{consumoBean.tourSel}" rowKey="#{tour.codigo}">
                         <p:ajax event="rowSelect" update="@form" />
                         <p:ajax event="rowUnselect" update="@form" />
                         <p:column headerText="C&#243;digo">
@@ -55,8 +55,31 @@
                             </h:outputText>
                         </p:column>
                     </p:dataTable>
-                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-                    <p:commandButton value="Seleccionar" actionListener="#{ConsumoBean.seleccionarTour(tour.codigo)}" update="@form"/>
+                    <p:commandButton value="Seleccionar" actionListener="#{consumoBean.seleccionarTour()}" update="@form"/>
+                </p:panel>
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Numero camarote" />
+                    <p:inputText  value="#{consumoBean.numCamarote}" />    
+                </p:panelGrid>
+                <p:commandButton value="Seleccionar" actionListener="#{consumoBean.seleccionarCamarote()}" update="@form"/>
+                <p:messages id="messages1" showDetail="true" autoUpdate="true" closable="true" />
+                <p:panel id="agrPnl" header="Agregar Consumos" rendered="#{consumoBean.enAgregar}">
+                    <p:panelGrid columns="2"> 
+                        <p:outputLabel for="cantidadCmb" value="Cantidad" />
+                        <p:selectOneMenu id="cantidadCmb" value="#{consumoBean.codMenu}">
+                            <f:selectItems var="menu" value="#{consumoBean.menus}" itemLabel="#{menu.nombre}" itemValue="#{menu.codigo}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel for="cantidad" value="Cantidad" />
+                        <p:inputText id="cantidad" value="#{consumoBean.consumo.cantidad}"  required="true" requiredMessage="Debe ingresar la cantidad"/>
+                        <p:outputLabel for="valor" value="Valor" />
+                        <p:inputText id="valor" value="#{consumoBean.consumo.valor}"/>
+                        <p:outputLabel for="fecha" value="Fecha" />
+                        <p:calendar id="fecha" value="#{consumoBean.consumo.fecha}" showOn="button" pattern="MM/dd/yyyy"  required="true" requiredMessage="Debe ingresar fecha"/>
+                        <p:outputLabel for="referencia" value="Referencia" />
+                        <p:inputText id="referencia" value="#{consumoBean.consumo.referencia}"  required="true" requiredMessage="Debe ingresar una referencia"/>
+                    </p:panelGrid>
+                    <p:commandButton value="Aceptar" actionListener="#{consumoBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{consumoBean.cancelar}" update="@form" immediate="true"/>
                 </p:panel>
             </p:panel>
         </ui:define>

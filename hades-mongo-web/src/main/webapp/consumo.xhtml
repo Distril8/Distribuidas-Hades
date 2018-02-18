@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="/templates/plantilla.xhtml">
+        <ui:define name="contenido">
+            <p:panel id="mainPnl" header="Registre su Consumo" style="width: 80%; margin: auto;">
+                 <p:panel id="buscPnl" header="B&#250;squeda">
+                    <p:panelGrid columns="2" style="margin-top:10px">
+                        <p:outputLabel  value="C&#243;digo Reserva" />
+                        <p:inputText  value="#{reservaBean.auxBusqueda}"  required="true" requiredMessage="Debe ingresara el parametro de busqueda"/>
+                    </p:panelGrid>
+                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{reservaBean.buscarR()}" update="@form" />
+                </p:panel>
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:commandButton value="Agregar" actionListener="#{consumoBean.agregar()}" update="@form"/>
+               
+                <p:panel header="Agregar Consumo" rendered="#{consumoBean.habilitaForm}">
+                <p:dataGrid var="menu" value="#{menuBean.itemsMenu}" columns="3" layout="grid"
+                            rows="12" paginator="true" id="menuGrd"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="6,12,16">
+                    <f:facet name="header">
+                        Menu
+                    </f:facet>
+                    <p:panel header="#{menu.nombre}" style="text-align:center">
+                        <h:panelGrid columns="1" style="width:100%">
+                            <p:graphicImage value="/menu/#{menu.imagen}.png" height="124px"/> 
+                            <h:outputText value="#{menu.descripcion}" />
+                            <h:outputText value="#{menu.precio}" >
+                            <f:convertNumber minFractionDigits="2" maxFractionDigits="2" currencySymbol="$"/>
+                            </h:outputText>
+                            <p:commandLink update="@form:productoDetail" oncomplete="PF('productoDialog').show()" title="View Detail">
+                                <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
+                                <f:setPropertyActionListener value="#{menu}" target="#{menuBean.itemMenuSel}" />
+                            </p:commandLink>
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                </p:dataGrid>
+                <p:dialog header="Producto Info" widgetVar="productoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="productoDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty menuBean.itemMenuSel}" columnClasses="label,value">
+                            <f:facet name="header">
+                                 
+                            </f:facet>
+                            
+                            <h:outputText value="Nombre:" />
+                            <h:outputText value="#{menuBean.itemMenuSel.nombre}" />
+                            <h:outputText value="Descripcion:" />
+                            <h:outputText value="$#{menuBean.itemMenuSel.descripcion}" />
+                            <h:outputText value="Precio:" />
+                            <h:outputText value="$#{menuBean.itemMenuSel.precio}" />
+
+                            
+                        </p:panelGrid>
+                        
+                        <p:commandButton value="Comprar"  id="comprar" icon="ui-icon-tag" actionListener="#{consumoBean.guardarMenu(menu.codigo)}" /> 
+                    </p:outputPanel>
+                </p:dialog>
+                
+                 <p:commandButton value="Aceptar" actionListener="#{consumoBean.guardar}" update="@form" />
+                    <p:commandButton value="Cancelar" actionListener="#{consumoBean.cancelar}" update="@form" immediate="true"/>
+                </p:panel>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

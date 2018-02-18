@@ -1,3 +1,4 @@
+
 /*
  * Hades Cruise
  * Aplicaciones Distribuidas
@@ -43,6 +44,8 @@ public class ReservaBean extends BaseBean implements Serializable {
     private String tipoTourBusqueda;
     private String codTipoAlimentacion;
     
+    private String auxBusqueda;
+    
     private boolean enBusquedaPorTipo;
     private boolean enTourElegido;
     private boolean enEncontrado;
@@ -62,6 +65,7 @@ public class ReservaBean extends BaseBean implements Serializable {
     private List<TipoTour> tiposTours;
     private List<Crucero> cruceros;
     private List<Camarote> camarotes;
+    private List<Reserva> reservas;
     private List<TipoAlimentacion> alimentaciones;
     
     @Inject
@@ -89,11 +93,16 @@ public class ReservaBean extends BaseBean implements Serializable {
         this.tour = new Tour();
         this.tiposTours = this.tipoTourService.obtenerTodos();
         this.alimentaciones = this.tipoAlimentacionService.obtenerTodos();
+        this.reservas = this.reservaService.obtenerTodos();
     }
 
     public void cambiarFiltro() {
         this.enBusquedaPorTipo = !this.enBusquedaPorTipo;
         System.out.println("Valor para enbusqueda: " + this.enBusquedaPorTipo);
+    }
+    
+    public void buscarR(){
+        this.reserva = this.reservaService.obtenerPorIdentificacion(auxBusqueda);
     }
 
     public void buscar() {
@@ -145,7 +154,6 @@ public class ReservaBean extends BaseBean implements Serializable {
             this.reserva.setCodigo(generarCodigo());
             this.reserva.setTipoAlimentacion(this.tipoAlimentacionService.obtenerPorCodigo(this.codTipoAlimentacion));
             this.reserva.setCliente(this.cliente);
-            this.reserva.setCamarote(this.camarotesSel.get(0));
             System.out.println(this.reserva);
             this.reservaService.crear(this.reserva);
             FacesUtil.addMessageInfo("Se agrego la reserva del cliente: " + this.cliente.getNombre());
@@ -366,4 +374,14 @@ public class ReservaBean extends BaseBean implements Serializable {
         }
         return aux;
     }
+
+    public String getAuxBusqueda() {
+        return auxBusqueda;
+    }
+
+    public void setAuxBusqueda(String auxBusqueda) {
+        this.auxBusqueda = auxBusqueda;
+    }
+    
+    
 }

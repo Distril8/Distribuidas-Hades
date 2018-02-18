@@ -8,7 +8,9 @@
 package ec.edu.espe.distribuidas.hades.service;
 
 import ec.edu.espe.distribuidas.hades.dao.ReservaDAO;
+import ec.edu.espe.distribuidas.hades.model.Camarote;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
+import ec.edu.espe.distribuidas.hades.model.Tour;
 import ec.edu.espe.distribuidas.nosql.mongo.MongoPersistence;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -40,6 +42,10 @@ public class ReservaService {
     
     public Reserva obtenerPorIdentificacion(String codigo) {
         return this.reservaFacade.findOne("codigo",codigo);
+    }
+    
+    public Reserva obtenerPorTourYCamarote(Tour tour,Camarote camarote){
+        return this.reservaFacade.findByTourAndCabin(tour,camarote);
     }
     
     public void crear(Reserva reserva) {

@@ -8,7 +8,9 @@
 package ec.edu.espe.distribuidas.hades.web;
 
 import ec.edu.espe.distribuidas.hades.model.Cliente;
+import ec.edu.espe.distribuidas.hades.model.Reserva;
 import ec.edu.espe.distribuidas.hades.service.ClienteService;
+import ec.edu.espe.distribuidas.hades.service.ReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
 import java.util.List;
@@ -30,6 +32,13 @@ public class ClienteBean extends BaseBean implements Serializable {
     private Cliente cliente;
 
     private Cliente clienteSel;
+    
+    private String auxBusqueda;
+    
+    private Reserva reserva;
+    
+    @Inject
+    private ReservaService reservaService;
 
     @Inject
     private ClienteService clienteService;
@@ -75,6 +84,17 @@ public class ClienteBean extends BaseBean implements Serializable {
         super.reset();
         this.cliente = new Cliente();
     }
+    
+    public void buscar() {
+        this.reserva = this.reservaService.obtenerPorIdentificacion(auxBusqueda);
+        if (reserva != null) {
+            this.clientes = this.clienteService.obtenerPorReserva(auxBusqueda);
+            if(clientes.isEmpty())
+                FacesUtil.addMessageInfo("No existen turistas registrados en la reserva");
+        } else {
+            FacesUtil.addMessageError(null, "No se encontró reserva, verifique el codigo");
+        }
+    }
 
     public void guardar() {
        try {
@@ -111,6 +131,22 @@ public class ClienteBean extends BaseBean implements Serializable {
 
     public List<Cliente> getClientes() {
         return clientes;
+    }
+
+    public String getAuxBusqueda() {
+        return auxBusqueda;
+    }
+
+    public void setAuxBusqueda(String auxBusqueda) {
+        this.auxBusqueda = auxBusqueda;
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
     }
     
 }
