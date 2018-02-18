@@ -44,4 +44,13 @@ public class CamaroteDAO extends BasicDAO<Camarote, ObjectId> {
         qry.criteria("tipo").equal(tipoCamarote);
         return qry.asList();
     }
+      public Camarote findByNameAndNumber(String nombre, Integer numero) {
+        Query<Camarote> qry = getDatastore().createQuery(Camarote.class);
+        qry.and(
+                qry.criteria("nomCrucero").equal(nombre),
+                qry.criteria("numero").equal(numero)
+        );
+        return qry.asList().get(0);
+    }
+    
 }
