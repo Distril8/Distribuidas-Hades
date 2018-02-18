@@ -8,18 +8,11 @@
 package ec.edu.espe.distribuidas.hades.web;
 
 import ec.edu.espe.distribuidas.hades.model.Consumo;
-import ec.edu.espe.distribuidas.hades.model.Crucero;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
-import ec.edu.espe.distribuidas.hades.model.TipoTour;
-import ec.edu.espe.distribuidas.hades.model.Tour;
 import ec.edu.espe.distribuidas.hades.service.ConsumoService;
-import ec.edu.espe.distribuidas.hades.service.CruceroService;
 import ec.edu.espe.distribuidas.hades.service.ReservaService;
-import ec.edu.espe.distribuidas.hades.service.TipoTourService;
-import ec.edu.espe.distribuidas.hades.service.TourService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -110,6 +103,14 @@ public class ConsumoBean extends BaseBean implements Serializable {
             FacesUtil.addMessageError(null, "No se puede eliminar el registro seleccionado. Verifique que no tenga informaci\u00f3n relacionada.");
         }
     }
+    
+//    public void guardarMenu(Integer codigoProducto){
+//        this.consumo.setCodigo(consumos.size()+1);
+//        this.consumo.setMenu(codigoProducto);
+//        this.carritoService.crear(this.carrito);
+//        super.reset();
+//        this.carrito = new Carrito();
+//    }
 
     public void guardar() {
         try {
