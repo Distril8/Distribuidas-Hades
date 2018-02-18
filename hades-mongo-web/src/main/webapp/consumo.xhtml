@@ -12,14 +12,31 @@
                  <p:panel id="buscPnl" header="B&#250;squeda">
                     <p:panelGrid columns="2" style="margin-top:10px">
                         <p:outputLabel  value="C&#243;digo Reserva" />
-                        <p:inputText  value="#{reservaBean.auxBusqueda}"  required="true" requiredMessage="Debe ingresara el parametro de busqueda"/>
+                        <p:inputText  value="#{reservaBean.auxBusqueda}"/>
                     </p:panelGrid>
                     <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{reservaBean.buscarR()}" update="@form" />
+                
+                <p:dataTable id="toursTbl" var="reserva" value="#{reservaBean.reservas}"
+                             selectionMode="single" selection="#{reservaBean.reservaSel}" rowKey="#{reserva.codigo}">
+                    <p:ajax event="rowSelect" update="@form" />
+                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:column headerText="C&#243;digo de Reserva">
+                        <h:outputText value="#{reserva.codigo}" />
+                    </p:column>
+                    <p:column headerText="Cliente">
+                        <h:outputText value="#{reserva.cliente.nombre} #{reserva.cliente.apellido} " />
+                    </p:column>
+                    <p:column headerText="Identificacion">
+                        <h:outputText value="#{reserva.cliente.identificacion}" />
+                    </p:column>
+                    <p:column headerText="Consumos">
+                        
+                    </p:column>
+                </p:dataTable>
+                
+                <p:commandButton value="Seleccionar" actionListener="#{consumoBean.elegirReserva()}" update="@form"/>
                 </p:panel>
-                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-                <p:commandButton value="Agregar" actionListener="#{consumoBean.agregar()}" update="@form"/>
-               
-                <p:panel header="Agregar Consumo" rendered="#{consumoBean.habilitaForm}">
+                <p:panel header="Agregar Consumo" rendered="#{consumoBean.enReservaElegido}">
                 <p:dataGrid var="menu" value="#{menuBean.itemsMenu}" columns="3" layout="grid"
                             rows="12" paginator="true" id="menuGrd"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -59,14 +76,14 @@
                             
                         </p:panelGrid>
                         
-                        <p:commandButton value="Comprar"  id="comprar" icon="ui-icon-tag" actionListener="#{consumoBean.guardarMenu(menu.codigo)}" /> 
+                        <p:commandButton value="Comprar"  id="comprar" icon="ui-icon-tag" actionListener="#{consumoBean.guardar()}" update="@form"/> 
                     </p:outputPanel>
                 </p:dialog>
-                
-                 <p:commandButton value="Aceptar" actionListener="#{consumoBean.guardar}" update="@form" />
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
                     <p:commandButton value="Cancelar" actionListener="#{consumoBean.cancelar}" update="@form" immediate="true"/>
                 </p:panel>
             </p:panel>
+            
         </ui:define>
     </ui:composition>
 </html>

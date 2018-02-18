@@ -59,6 +59,7 @@ public class ReservaBean extends BaseBean implements Serializable {
     private Cliente cliente;
     private Camarote camarote;
     private TipoAlimentacion alimentacionSel;
+    private Reserva reservaSel;
     
     private List<Camarote> camarotesSel;
     private List<Tour> tours;
@@ -381,6 +382,22 @@ public class ReservaBean extends BaseBean implements Serializable {
 
     public void setAuxBusqueda(String auxBusqueda) {
         this.auxBusqueda = auxBusqueda;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
+    }
+
+    public Reserva getReservaSel() {
+        return reservaSel;
+    }
+
+    public void setReservaSel(Reserva reservaSel) {
+        this.reservaSel = reservaSel;
     }
     
     

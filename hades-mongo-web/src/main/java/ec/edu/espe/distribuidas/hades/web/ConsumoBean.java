@@ -8,6 +8,7 @@
 package ec.edu.espe.distribuidas.hades.web;
 
 import ec.edu.espe.distribuidas.hades.model.Consumo;
+import ec.edu.espe.distribuidas.hades.model.Menu;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
 import ec.edu.espe.distribuidas.hades.service.ConsumoService;
 import ec.edu.espe.distribuidas.hades.service.ReservaService;
@@ -30,19 +31,19 @@ public class ConsumoBean extends BaseBean implements Serializable {
     private String filtro;
     private String reservaBusqueda;
     private boolean enBusquedaPorTipo;
-    
-    
+    private boolean enReservaElegido;
+    private Menu menu;
+
     private List<Consumo> consumos;
     private Consumo consumo;
     private Consumo consumoSel;
+    private Reserva reservaSel;
     private List<Reserva> reservas;
-    
 
     @Inject
     private ConsumoService consumoService;
     @Inject
     private ReservaService reservaService;
-   
 
     @PostConstruct
     public void init() {
@@ -51,20 +52,21 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.consumos = this.consumoService.obtenerTodos();
         this.consumo = new Consumo();
         this.reservas = this.reservaService.obtenerTodos();
-        
+        this.enReservaElegido = false;
+
     }
-    
+
     public void cambiarFiltro() {
         this.enBusquedaPorTipo = !this.enBusquedaPorTipo;
-        System.out.println("Valor para enbusqueda: "+this.enBusquedaPorTipo);
+        System.out.println("Valor para enbusqueda: " + this.enBusquedaPorTipo);
     }
-    
+
     public void buscar() {
-        
-            Reserva reserva = new Reserva();
-            reserva.setCodigo(this.reservaBusqueda);
-            this.consumos = this.consumoService.buscarPorReserva(recuperaReserva(reserva));
-        
+
+        Reserva reserva = new Reserva();
+        reserva.setCodigo(this.reservaBusqueda);
+        this.consumos = this.consumoService.buscarPorReserva(recuperaReserva(reserva));
+
     }
 
     @Override
@@ -78,7 +80,7 @@ public class ConsumoBean extends BaseBean implements Serializable {
         super.reset();
         this.consumo = new Consumo();
         this.reservas = this.reservaService.obtenerTodos();
-        
+
     }
 
     @Override
@@ -103,28 +105,25 @@ public class ConsumoBean extends BaseBean implements Serializable {
             FacesUtil.addMessageError(null, "No se puede eliminar el registro seleccionado. Verifique que no tenga informaci\u00f3n relacionada.");
         }
     }
-    
-//    public void guardarMenu(Integer codigoProducto){
-//        this.consumo.setCodigo(consumos.size()+1);
-//        this.consumo.setMenu(codigoProducto);
-//        this.carritoService.crear(this.carrito);
-//        super.reset();
-//        this.carrito = new Carrito();
-//    }
+
+    public void guardarConsumo(Menu codigoProducto, String codReserva) {
+        System.out.println("" + codReserva);
+        this.consumo.setCodigo(consumos.size() + 1);
+        this.consumo.setMenu(codigoProducto);
+        System.out.println("" + codReserva);
+        this.consumoService.crear(this.consumo);
+        super.reset();
+        this.consumo = new Consumo();
+    }
 
     public void guardar() {
         try {
-            
-            consumo.setReserva(retornaReserva(this.consumo));
-            
 
-            if (this.enAgregar) {
-                this.consumoService.crear(this.consumo);
-                FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getCantidad());
-            } else {
-                this.consumoService.modificar(this.consumo);
-                FacesUtil.addMessageInfo("Se modific\u00f3 la Actividad con c\u00f3digo: " + this.consumo.getCodigo());
-            }
+            //consumo.setReserva(retornaReserva(this.consumo));
+            this.consumo.setCodigo(consumos.size() + 1);
+            this.consumo.setMenu(this.menu);
+            this.consumoService.crear(this.consumo);
+            FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getCantidad());
 
         } catch (Exception e) {
             FacesUtil.addMessageError(null, "Ocurrí\u00f3 un error al actualizar la informaci\u00f3n");
@@ -133,9 +132,15 @@ public class ConsumoBean extends BaseBean implements Serializable {
         super.reset();
         this.consumo = new Consumo();
         //this.actividadPK = new ActividadPK();
+        this.menu = new Menu();
         this.consumos = this.consumoService.obtenerTodos();
         this.reservas = this.reservaService.obtenerTodos();
-        
+
+    }
+
+    public void elegirReserva() {
+        this.consumo.setReserva(this.reservaSel);
+        this.enReservaElegido = true;
     }
 
     public String getFiltro() {
@@ -186,7 +191,6 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.reservas = reservas;
     }
 
-    
     public boolean isEnBusquedaPorTipo() {
         return enBusquedaPorTipo;
     }
@@ -195,36 +199,36 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.enBusquedaPorTipo = enBusquedaPorTipo;
     }
 
-   
-    
-    public Reserva retornaReserva(Consumo consumo)
-    {
+    public Reserva retornaReserva(Consumo consumo) {
         Reserva aux = new Reserva();
-        
-        for(int i= 0; i<reservas.size();i++)
-        {
-            aux= reservas.get(i);
-            if(aux.getCodigo().equals(consumo.getReserva().getCodigo()))
-            {
+
+        for (int i = 0; i < reservas.size(); i++) {
+            aux = reservas.get(i);
+            if (aux.getCodigo().equals(consumo.getReserva().getCodigo())) {
                 break;
             }
         }
         return aux;
     }
-    
- 
-    public Reserva recuperaReserva(Reserva reserva)
-    {
+
+    public Reserva recuperaReserva(Reserva reserva) {
         Reserva aux = new Reserva();
-        
-        for(int i= 0; i<reservas.size();i++)
-        {
-            aux= reservas.get(i);
-            if(aux.getCodigo().equals(reserva.getCodigo()))
-            {
+
+        for (int i = 0; i < reservas.size(); i++) {
+            aux = reservas.get(i);
+            if (aux.getCodigo().equals(reserva.getCodigo())) {
                 break;
             }
         }
         return aux;
     }
+
+    public boolean isEnReservaElegido() {
+        return enReservaElegido;
+    }
+
+    public void setEnReservaElegido(boolean enReservaElegido) {
+        this.enReservaElegido = enReservaElegido;
+    }
+
 }
