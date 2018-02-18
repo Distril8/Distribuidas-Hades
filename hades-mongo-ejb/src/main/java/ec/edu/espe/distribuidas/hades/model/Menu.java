@@ -23,6 +23,7 @@ public class Menu extends BaseEntity {
     @Indexed(options = @IndexOptions(name = "menu_codigoUIdx", unique = true))
     private Integer codigo;
     private String nombre;
+    private String imagen;
     private String descripcion;
     private BigDecimal precio;
     private MenuEnum tipo;
@@ -32,6 +33,14 @@ public class Menu extends BaseEntity {
 
     public Menu(Integer codigo) {
         this.codigo = codigo;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
     
 

@@ -9,6 +9,7 @@ package ec.edu.espe.distribuidas.hades.service;
 
 import ec.edu.espe.distribuidas.hades.dao.MenuDAO;
 import ec.edu.espe.distribuidas.hades.model.Menu;
+import ec.edu.espe.distribuidas.hades.model.Reserva;
 import ec.edu.espe.distribuidas.nosql.mongo.MongoPersistence;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -65,4 +66,6 @@ public class MenuService {
         Menu menu = this.menuDao.findOne("codigo", codigo);
         this.menuDao.delete(menu);
     }
+    
+    
 }

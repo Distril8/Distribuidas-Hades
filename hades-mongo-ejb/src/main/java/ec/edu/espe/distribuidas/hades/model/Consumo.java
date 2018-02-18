@@ -7,19 +7,23 @@
  */
 package ec.edu.espe.distribuidas.hades.model;
 
-import java.io.Serializable;
+import ec.edu.espe.distribuidas.nosql.mongo.BaseEntity;
 import java.math.BigDecimal;
 import java.util.Date;
-import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.IndexOptions;
+import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Reference;
 
 /**
  *
  * @author Hades Cruise Corp.
  */
-@Embedded
-public class Consumo implements Serializable {
+@Entity(noClassnameStored = true, value = "consumo")
+public class Consumo extends BaseEntity {
 
+    @Indexed(options = @IndexOptions(name = "consumo_codigoUIdx", unique = true))
+    private Integer codigo;
     @Reference
     private Reserva reserva;
     @Reference
@@ -32,6 +36,13 @@ public class Consumo implements Serializable {
     public Consumo() {
     }
 
+    public Consumo(Reserva reserva, Menu menu) {
+        
+        this.reserva = reserva;
+        this.menu = menu;
+    }
+
+    
     public Reserva getReserva() {
         return reserva;
     }
@@ -78,5 +89,40 @@ public class Consumo implements Serializable {
 
     public void setReferencia(String referencia) {
         this.referencia = referencia;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
+    
+    @Override
+    public String toString() {
+        return "Consumo{" + "codigo=" + codigo + ", reserva=" + reserva + ", menu=" + menu + ", cantidad=" + cantidad + ", valor=" + valor + ", fecha=" + fecha + ", referencia=" + referencia + '}';
+    }
+    
+    
+     @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (super.id != null ? super.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Consumo)) {
+            return false;
+        }
+        Consumo other = (Consumo) object;
+        if ((super.id == null && other.id != null) || (super.id != null && !super.id.equals(super.id))) {
+            return false;
+        }
+        return true;
     }
 }
