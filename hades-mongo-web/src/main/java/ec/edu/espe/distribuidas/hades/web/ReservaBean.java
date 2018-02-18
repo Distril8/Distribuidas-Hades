@@ -145,6 +145,7 @@ public class ReservaBean extends BaseBean implements Serializable {
             this.reserva.setCodigo(generarCodigo());
             this.reserva.setTipoAlimentacion(this.tipoAlimentacionService.obtenerPorCodigo(this.codTipoAlimentacion));
             this.reserva.setCliente(this.cliente);
+            this.reserva.setCamarote(this.camarotesSel.get(0));
             System.out.println(this.reserva);
             this.reservaService.crear(this.reserva);
             FacesUtil.addMessageInfo("Se agrego la reserva del cliente: " + this.cliente.getNombre());
