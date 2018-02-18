@@ -11,6 +11,7 @@ import ec.edu.espe.distribuidas.hades.model.Consumo;
 import ec.edu.espe.distribuidas.hades.model.Menu;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
 import ec.edu.espe.distribuidas.hades.service.ConsumoService;
+import ec.edu.espe.distribuidas.hades.service.MenuService;
 import ec.edu.espe.distribuidas.hades.service.ReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
@@ -33,17 +34,23 @@ public class ConsumoBean extends BaseBean implements Serializable {
     private boolean enBusquedaPorTipo;
     private boolean enReservaElegido;
     private Menu menu;
+    private Menu menuSel;
 
     private List<Consumo> consumos;
+    private List<Menu> menus;
     private Consumo consumo;
     private Consumo consumoSel;
     private Reserva reservaSel;
+    private Reserva reserva;
     private List<Reserva> reservas;
+    private String auxBusqueda;
 
     @Inject
     private ConsumoService consumoService;
     @Inject
     private ReservaService reservaService;
+     @Inject
+    private MenuService menuService;
 
     @PostConstruct
     public void init() {
@@ -52,6 +59,7 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.consumos = this.consumoService.obtenerTodos();
         this.consumo = new Consumo();
         this.reservas = this.reservaService.obtenerTodos();
+        this.menus = this.menuService.obtenerTodos();
         this.enReservaElegido = false;
 
     }
@@ -82,6 +90,10 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.reservas = this.reservaService.obtenerTodos();
 
     }
+    
+    public void buscarR(){
+        this.reserva = this.reservaService.obtenerPorIdentificacion(auxBusqueda);
+    }
 
     @Override
     public void modificar() {
@@ -89,6 +101,7 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.consumo = new Consumo();
         this.consumo.setCodigo(this.consumoSel.getCodigo());
         this.consumo.setReserva(this.consumoSel.getReserva());
+        this.consumo.setMenu(this.consumoSel.getMenu());
         this.consumo.setCantidad(this.consumoSel.getCantidad());
         this.consumo.setFecha(this.consumoSel.getFecha());
         this.consumo.setValor(this.consumoSel.getValor());
@@ -123,7 +136,7 @@ public class ConsumoBean extends BaseBean implements Serializable {
             this.consumo.setCodigo(consumos.size() + 1);
             this.consumo.setMenu(this.menu);
             this.consumoService.crear(this.consumo);
-            FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getCantidad());
+            FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getMenu().getPrecio());
 
         } catch (Exception e) {
             FacesUtil.addMessageError(null, "Ocurrí\u00f3 un error al actualizar la informaci\u00f3n");
@@ -131,16 +144,24 @@ public class ConsumoBean extends BaseBean implements Serializable {
 
         super.reset();
         this.consumo = new Consumo();
-        //this.actividadPK = new ActividadPK();
-        this.menu = new Menu();
-        this.consumos = this.consumoService.obtenerTodos();
+        
+        
+        this.menus = this.menuService.obtenerTodos();
         this.reservas = this.reservaService.obtenerTodos();
+        
 
     }
 
     public void elegirReserva() {
         this.consumo.setReserva(this.reservaSel);
         this.enReservaElegido = true;
+        System.out.println(this.consumo.getReserva());
+    }
+    
+    public void elegirMenu() {
+        this.consumo.setMenu(this.menuSel);
+        //this.enReservaElegido = true;
+        System.out.println(this.consumo.getReserva());
     }
 
     public String getFiltro() {
@@ -231,4 +252,56 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.enReservaElegido = enReservaElegido;
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    public List<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(List<Menu> menus) {
+        this.menus = menus;
+    }
+
+    public Reserva getReservaSel() {
+        return reservaSel;
+    }
+
+    public void setReservaSel(Reserva reservaSel) {
+        this.reservaSel = reservaSel;
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public String getAuxBusqueda() {
+        return auxBusqueda;
+    }
+
+    public void setAuxBusqueda(String auxBusqueda) {
+        this.auxBusqueda = auxBusqueda;
+    }
+
+    public Menu getMenuSel() {
+        return menuSel;
+    }
+
+    public void setMenuSel(Menu menuSel) {
+        this.menuSel = menuSel;
+    }
+
+    
+    
+
+    
 }
