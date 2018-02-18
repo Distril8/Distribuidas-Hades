@@ -15,6 +15,8 @@ import ec.edu.espe.distribuidas.hades.service.MenuService;
 import ec.edu.espe.distribuidas.hades.service.ReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -135,8 +137,9 @@ public class ConsumoBean extends BaseBean implements Serializable {
             //consumo.setReserva(retornaReserva(this.consumo));
             this.consumo.setCodigo(consumos.size() + 1);
             //this.consumo.setMenu(this.menu);
+            this.consumo.setFecha(fecha());
             this.consumoService.crear(this.consumo);
-            FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getMenu().getPrecio());
+            FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getValor());
 
         } catch (Exception e) {
             FacesUtil.addMessageError(null, "Ocurrí\u00f3 un error al actualizar la informaci\u00f3n");
@@ -159,9 +162,23 @@ public class ConsumoBean extends BaseBean implements Serializable {
     }
     
     public void elegirMenu(Menu menuSel) {
+        //if(this.consumo.getCantidad()==0){
         this.consumo.setMenu(this.menuSel);
-        //this.enReservaElegido = true;
+        
+        //
+        this.consumo.setValor(valor(this.consumo.getCantidad(),this.menuSel.getPrecio()));
+        //}
+       
         System.out.println(""+this.consumo.getMenu());
+    }
+    
+    public BigDecimal valor(Integer cantidad, BigDecimal precio)
+    {
+        BigDecimal valor = BigDecimal.ZERO;
+        BigDecimal costo = BigDecimal.ZERO;
+        costo = precio.multiply(new BigDecimal(cantidad));
+        valor =  valor.add(costo);
+        return costo;   
     }
 
     public String getFiltro() {
@@ -298,6 +315,11 @@ public class ConsumoBean extends BaseBean implements Serializable {
 
     public void setMenuSel(Menu menuSel) {
         this.menuSel = menuSel;
+    }
+    
+    public Date fecha(){
+        Date fecha = new Date();
+        return fecha;
     }
 
     
