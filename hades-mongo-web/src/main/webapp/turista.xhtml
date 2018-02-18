@@ -70,12 +70,12 @@
                         <p:confirm header="Aceptar" message="El peso esta excedido en #{turistaBean.excedenteKilos} kg con un valor extra de #{turistaBean.excedenteValor} USD, desea continuar de todos modos?" icon="ui-icon-alert" />
                     </p:commandButton>
                     <p:commandButton value="Cancelar" actionListener="#{turistaBean.cancelar}" update="@form" immediate="true"/>
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>
                 </p:panel>
             </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
         </ui:define>
     </ui:composition>
 </html>
