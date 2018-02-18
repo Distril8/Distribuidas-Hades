@@ -44,6 +44,10 @@ public class ClienteService {
     public void crear(Cliente cliente) {
         this.clienteFacade.save(cliente);
     }
+    
+    public List<Cliente> obtenerPorReserva(String codReserva) {
+        return this.clienteFacade.findByReserva(codReserva);
+    }
 
     public void modificar(Cliente cliente) {
         Cliente aux = this.clienteFacade.findOne("identificacion", cliente.getIdentificacion());

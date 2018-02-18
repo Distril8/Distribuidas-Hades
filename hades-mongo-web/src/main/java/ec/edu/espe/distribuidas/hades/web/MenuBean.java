@@ -8,8 +8,12 @@
 package ec.edu.espe.distribuidas.hades.web;
 
 import ec.edu.espe.distribuidas.hades.enums.MenuEnum;
+import ec.edu.espe.distribuidas.hades.model.Consumo;
 import ec.edu.espe.distribuidas.hades.model.Menu;
+import ec.edu.espe.distribuidas.hades.model.Reserva;
+import ec.edu.espe.distribuidas.hades.service.ConsumoService;
 import ec.edu.espe.distribuidas.hades.service.MenuService;
+import ec.edu.espe.distribuidas.hades.service.ReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
 import java.util.List;
@@ -27,11 +31,20 @@ import javax.inject.Named;
 public class MenuBean extends BaseBean implements Serializable {
 
     private List<Menu> itemsMenu;
+    private String reservaBusqueda;
+    private List<Consumo> consumos;
+    private List<Reserva> reservas;
+    private Consumo consumo;
     private Menu itemMenu;
     private Menu itemMenuSel;
-
+    private String menuBusqueda;
+    
     @Inject
     private MenuService menuService;
+    
+    @Inject
+    private ConsumoService consumoService;
+    
 
     @PostConstruct
     public void init() {
@@ -43,6 +56,8 @@ public class MenuBean extends BaseBean implements Serializable {
     public List<Menu> getItemsMenu() {
         return itemsMenu;
     }
+    
+    
 
     @Override
     public void agregar() {
@@ -50,6 +65,8 @@ public class MenuBean extends BaseBean implements Serializable {
         super.agregar();
         
     }
+    
+   
 
     @Override
     public void modificar() {
@@ -100,6 +117,35 @@ public class MenuBean extends BaseBean implements Serializable {
         this.itemMenu = new Menu();
         this.itemsMenu = this.menuService.obtenerTodos();
     }
+    public void guardarConsumo(Integer codigoProducto){
+//        this.carrito.setCodigo(carritos.size()+1);
+//        this.carrito.setProducto(codigoProducto);
+//        this.carritoService.crear(this.carrito);
+//        super.reset();
+//        this.carrito = new Carrito();
+    }
+    
+    public void buscar() {
+
+        Reserva reserva = new Reserva();
+        reserva.setCodigo(this.reservaBusqueda);
+     //   this.consumos = this.consumoService.buscarPorReserva(recuperaTipo(reserva));
+
+    }
+    
+//    public Menu recuperaTipo(String tipo) {
+//        Menu aux = new Menu();
+//
+//        for (int i = 0; i < itemsMenu.size(); i++) {
+//            aux = tiposTours.get(i);
+//            if (aux.getCodigo().equals(tipoTour.getCodigo())) {
+//                break;
+//            }
+//        }
+//        return aux;
+//    }
+
+
     
     public MenuEnum[] getTiposMenu(){
         return MenuEnum.values();
@@ -120,4 +166,46 @@ public class MenuBean extends BaseBean implements Serializable {
     public void setItemMenuSel(Menu menuSel) {
         this.itemMenuSel = menuSel;
     }
+
+    public String getReservaBusqueda() {
+        return reservaBusqueda;
+    }
+
+    public void setReservaBusqueda(String reservaBusqueda) {
+        this.reservaBusqueda = reservaBusqueda;
+    }
+
+    public List<Consumo> getConsumos() {
+        return consumos;
+    }
+
+    public void setConsumos(List<Consumo> consumos) {
+        this.consumos = consumos;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
+    }
+
+    public Consumo getConsumo() {
+        return consumo;
+    }
+
+    public void setConsumo(Consumo consumo) {
+        this.consumo = consumo;
+    }
+
+    public String getMenuBusqueda() {
+        return menuBusqueda;
+    }
+
+    public void setMenuBusqueda(String menuBusqueda) {
+        this.menuBusqueda = menuBusqueda;
+    }
+    
+  
 }

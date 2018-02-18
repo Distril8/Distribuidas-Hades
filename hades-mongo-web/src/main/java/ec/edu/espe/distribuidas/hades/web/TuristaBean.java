@@ -13,6 +13,7 @@ import ec.edu.espe.distribuidas.hades.service.ReservaService;
 import ec.edu.espe.distribuidas.hades.service.TuristaReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -32,6 +33,10 @@ public class TuristaBean extends BaseBean implements Serializable {
     private TuristaReserva turista;
     private TuristaReserva turistaSel;
     private Reserva reserva;
+    private Integer valorMaximo;
+    private BigDecimal excedenteKilos;
+    private Integer excedenteValor;
+    private String mensaje;
     
     @Inject
     private TuristaReservaService turistaReservaService;
@@ -44,6 +49,9 @@ public class TuristaBean extends BaseBean implements Serializable {
     public void init() {
         this.turista = new TuristaReserva();
         this.reserva = new Reserva();
+        this.excedenteKilos = new BigDecimal(0);
+        this.excedenteValor = 0;
+        this.mensaje = "";
     }
 
     public void buscar() {
@@ -56,12 +64,25 @@ public class TuristaBean extends BaseBean implements Serializable {
             FacesUtil.addMessageError(null, "No se encontró reserva, verifique el codigo");
         }
     }
+    
+    public void valoresValidacion(BigDecimal kilos, Integer valorMaximo){
+        BigDecimal kilosExtras = BigDecimal.valueOf(valorMaximo - 10);
+        this.excedenteKilos = kilos.subtract(kilosExtras);
+        this.excedenteKilos = this.excedenteKilos.setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.excedenteValor = this.excedenteKilos.intValueExact() * 10;
+    }
+
 
     @Override
     public void agregar() {
         this.turista = new TuristaReserva();
         super.agregar();
-        
+        String tipo = this.reservaService.obtenerPorIdentificacion(this.auxBusqueda).getTour().getTipoTour().getNombre();
+        if(tipo.equals("Aventura Extrema")){
+            this.valorMaximo = 42;
+        }else{
+            this.valorMaximo = 35;
+        }
     }
 
     @Override
@@ -88,6 +109,8 @@ public class TuristaBean extends BaseBean implements Serializable {
     }
 
     public void guardar() {
+        System.out.println("valor mx - 10: "+this.valorMaximo);
+        this.valoresValidacion(this.turista.getPesoMaleta(),this.valorMaximo);
         try {
             this.turistaReservaService.crear(this.turista);
             FacesUtil.addMessageInfo("Se agrego el turista: " + this.turista.getNombre());
@@ -108,12 +131,44 @@ public class TuristaBean extends BaseBean implements Serializable {
         }
     }
 
+    public BigDecimal getExcedenteKilos() {
+        return excedenteKilos;
+    }
+
+    public void setExcedenteKilos(BigDecimal excedenteKilos) {
+        this.excedenteKilos = excedenteKilos;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public Integer getExcedenteValor() {
+        return excedenteValor;
+    }
+
+    public void setExcedenteValor(Integer excedenteValor) {
+        this.excedenteValor = excedenteValor;
+    }
+
     public String getAuxBusqueda() {
         return auxBusqueda;
     }
 
     public void setAuxBusqueda(String auxBusqueda) {
         this.auxBusqueda = auxBusqueda;
+    }
+
+    public Integer getValorMaximo() {
+        return valorMaximo;
+    }
+
+    public void setValorMaximo(Integer valorMaximo) {
+        this.valorMaximo = valorMaximo;
     }
     
     public List<TuristaReserva> getTuristas() {

@@ -47,7 +47,11 @@
                         <p:inputText id="codigoReserva" value="#{turistaBean.turista.codReserva}"  required="true" requiredMessage="Debe ingresar el codigo de reserva"/>
                         <p:message for="codigoReserva" />
                         <p:outputLabel for="tipoIdentificacion" value="Tipo Identificaci&#243;n" />
-                        <p:inputText id="tipoIdentificacion" value="#{turistaBean.turista.tipoIdentificacion}" disabled="#{turistaBean.enModificar}" required="true" requiredMessage="Debe ingresara el tipo de identificacion"/>
+                        <p:selectOneMenu id="tipoIdentificacion" value="#{turistaBean.turista.tipoIdentificacion}" disabled="#{clienteBean.enModificar}" required="true" requiredMessage="Debe ingresara el tipo de identificacion" style="width:175px">
+                            <f:selectItem itemLabel="Seleccionar uno" itemValue="" />
+                            <f:selectItem itemLabel="Cedula" itemValue="CED" />
+                            <f:selectItem itemLabel="RUC" itemValue="RUC" />
+                        </p:selectOneMenu>
                         <p:message for="tipoIdentificacion" />
                         <p:outputLabel for="identificacion" value="Identificaci&#243;n" />
                         <p:inputText id="identificacion" value="#{turistaBean.turista.identificacion}" disabled="#{turistaBean.enModificar}" required="true" requiredMessage="Debe ingresar el codigo de turista"/>
@@ -59,13 +63,19 @@
                         <p:calendar id="fechaNacimiento" value="#{turistaBean.turista.fechaNacimiento}" showOn="button" pattern="MM/dd/yyyy"  required="true" requiredMessage="Debe ingresar fecha nacimiento"/>
                         <p:message for="fechaNacimiento" />
                         <p:outputLabel for="pesoMaleta" value="Peso Maleta" />
-                        <p:inputText id="pesoMaleta" value="#{turistaBean.turista.pesoMaleta}"  required="true" requiredMessage="Debe ingresar peso maleta"/>
+                        <p:inputNumber id="pesoMaleta" value="#{turistaBean.turista.pesoMaleta}"  required="true" requiredMessage="Debe ingresar peso maleta" minValue="0" maxValue="#{turistaBean.valorMaximo}"/>
                         <p:message for="pesoMaleta" />
                     </p:panelGrid>
-                    <p:commandButton value="Aceptar" actionListener="#{turistaBean.guardar}" update="@form" />
+                    <p:commandButton value="Aceptar" actionListener="#{turistaBean.guardar}" update="@form" >
+                        <p:confirm header="Aceptar" message="El peso esta excedido en #{turistaBean.excedenteKilos} kg con un valor extra de #{turistaBean.excedenteValor} USD, desea continuar de todos modos?" icon="ui-icon-alert" />
+                    </p:commandButton>
                     <p:commandButton value="Cancelar" actionListener="#{turistaBean.cancelar}" update="@form" immediate="true"/>
                 </p:panel>
             </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
         </ui:define>
     </ui:composition>
 </html>

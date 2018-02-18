@@ -29,4 +29,10 @@ public class ClienteDAO extends BasicDAO<Cliente, ObjectId> {
         qry.criteria("identificacion").equal(identificacion);
         return  qry.asList();
     }
+    
+     public  List<Cliente> findByReserva(String codReserva){
+        Query<Cliente> qry = getDatastore().createQuery(Cliente.class);
+        qry.criteria("codReserva").equal(codReserva);
+        return  qry.asList();
+    }
 }

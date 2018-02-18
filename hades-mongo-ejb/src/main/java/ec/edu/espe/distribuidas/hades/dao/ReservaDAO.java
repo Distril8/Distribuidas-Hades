@@ -5,6 +5,7 @@
  */
 package ec.edu.espe.distribuidas.hades.dao;
 
+import ec.edu.espe.distribuidas.hades.model.Camarote;
 import ec.edu.espe.distribuidas.hades.model.Cliente;
 import ec.edu.espe.distribuidas.hades.model.Crucero;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
@@ -26,9 +27,9 @@ public class ReservaDAO extends BasicDAO<Reserva, ObjectId>{
         super(objectEntity, ds);
     }
     
-    public List<Reserva> findByCliente(Cliente identificacion){
+    public List<Reserva> findByCliente(Cliente cliente){
         Query<Reserva> qry = getDatastore().createQuery(Reserva.class);
-        qry.criteria("identificacion").equal(identificacion);
+        qry.criteria("cliente").equal(cliente);
         return qry.asList();
     }
     
@@ -41,5 +42,16 @@ public class ReservaDAO extends BasicDAO<Reserva, ObjectId>{
             qry.criteria("crucero").equal(crucero)
         );
         return qry.asList();
+    }
+    public Reserva findByTourAndCabin(Tour tour,Camarote camarote){
+    Query<Reserva> qry = getDatastore().createQuery(Reserva.class);
+        qry.and(
+            qry.criteria("tour").equal(tour),
+            qry.criteria("camarote").equal(camarote)
+        );
+        if(qry.asList().size()>0)
+            return qry.asList().get(0);
+        else
+            return null;
     }
 }
