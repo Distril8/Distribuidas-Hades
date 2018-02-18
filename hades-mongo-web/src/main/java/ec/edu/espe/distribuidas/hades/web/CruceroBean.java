@@ -132,7 +132,7 @@ public class CruceroBean extends BaseBean implements Serializable {
                     this.camarote.setCapacidad(6);
                     this.camarote.setUbicacion("Sur-Barco");
                 }
-                this.camarote.setNumero(i);
+                this.camarote.setNumero(i+1);
                 this.camaroteService.crear(camarote);
             }
         } else {
