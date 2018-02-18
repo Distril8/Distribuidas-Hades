@@ -40,7 +40,7 @@
                     <p:dataGrid var="menu" value="#{consumoBean.menus}" columns="3" layout="grid"
                             rows="12" paginator="true" id="menuGrd"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                            rowsPerPageTemplate="6,12,16">
+                            rowsPerPageTemplate="6,12,16" rowIndexVar="#{menu.codigo}">
                     <f:facet name="header">
                         Menu
                     </f:facet>
@@ -61,7 +61,7 @@
                 </p:dataGrid>
                 <p:dialog header="Producto Info" widgetVar="productoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                     <p:outputPanel id="productoDetail" style="text-align:center;">
-                        <p:panelGrid  columns="2" rendered="#{not empty consumoBean.menuSel}" columnClasses="label,value">
+                        <p:panelGrid  columns="2" rendered="#{not empty consumoBean.menuSel}" columnClasses="label,value"  >
                             <f:facet name="header">
                                  
                             </f:facet>
@@ -76,7 +76,7 @@
                             
                         </p:panelGrid>
                         
-                        <p:commandButton value="Comprar"  id="comprar" icon="ui-icon-tag" actionListener="#{consumoBean.elegirMenu()}" update="@form"/> 
+                        <p:commandButton value="Comprar"  id="comprar" icon="ui-icon-tag" actionListener="#{consumoBean.elegirMenu(menuSel)}" update="@form"/> 
                     </p:outputPanel>
                 </p:dialog>
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />

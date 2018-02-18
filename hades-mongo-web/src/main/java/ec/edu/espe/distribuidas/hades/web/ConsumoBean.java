@@ -134,7 +134,7 @@ public class ConsumoBean extends BaseBean implements Serializable {
 
             //consumo.setReserva(retornaReserva(this.consumo));
             this.consumo.setCodigo(consumos.size() + 1);
-            this.consumo.setMenu(this.menu);
+            //this.consumo.setMenu(this.menu);
             this.consumoService.crear(this.consumo);
             FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getMenu().getPrecio());
 
@@ -144,8 +144,8 @@ public class ConsumoBean extends BaseBean implements Serializable {
 
         super.reset();
         this.consumo = new Consumo();
-        
-        
+        this.menu = new Menu();
+        this.reserva = new Reserva();
         this.menus = this.menuService.obtenerTodos();
         this.reservas = this.reservaService.obtenerTodos();
         
@@ -158,10 +158,10 @@ public class ConsumoBean extends BaseBean implements Serializable {
         System.out.println(this.consumo.getReserva());
     }
     
-    public void elegirMenu() {
+    public void elegirMenu(Menu menuSel) {
         this.consumo.setMenu(this.menuSel);
         //this.enReservaElegido = true;
-        System.out.println(this.consumo.getReserva());
+        System.out.println(""+this.consumo.getMenu());
     }
 
     public String getFiltro() {
