@@ -15,8 +15,10 @@ import ec.edu.espe.distribuidas.hades.model.Tour;
 import ec.edu.espe.distribuidas.hades.model.TuristaReserva;
 import ec.edu.espe.distribuidas.hades.service.CheckOutService;
 import ec.edu.espe.distribuidas.hades.service.ClienteService;
+import ec.edu.espe.distribuidas.hades.service.ConsumoService;
 import ec.edu.espe.distribuidas.hades.service.ReservaService;
 import ec.edu.espe.distribuidas.hades.service.TourService;
+import ec.edu.espe.distribuidas.hades.service.TuristaReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
 import java.util.List;
@@ -33,8 +35,9 @@ import javax.inject.Named;
 @ViewScoped
 public class checkOutBean extends BaseBean implements Serializable {
 
-    private String identificacionCliente;
-    
+    private String auxBusqueda;
+    private boolean enBusquedaPorReserva;
+    private String filtro;
     private List<CheckOut> checkOuts;
     private CheckOut checkOut;
     private CheckOut checkOutSel;
@@ -47,9 +50,11 @@ public class checkOutBean extends BaseBean implements Serializable {
 
     private List<Reserva> reservas;
     private Reserva reserva;
-    
-    private TuristaReserva turista;
+    private Reserva reservaSel;
 
+    private TuristaReserva turista;
+    private List<TuristaReserva> turistas;
+    
     private List<Consumo> consumos;
     private Consumo consumo;
 
@@ -65,17 +70,27 @@ public class checkOutBean extends BaseBean implements Serializable {
     private TourService tourService;
     @Inject
     private ReservaService reservaService;
-//    @Inject
-//    private ConsumoService consumoService;
-   
+    @Inject
+    private ConsumoService consumoService;
+    @Inject
+    private TuristaReservaService turistaService;
+
     @PostConstruct
     public void init() {
+        this.filtro = "RES";
+        this.enBusquedaPorReserva = true;
         this.cliente = new Cliente();
         this.tour = new Tour();
         this.reserva = new Reserva();
+        this.reservas= this.reservaService.obtenerTodos();
 //        this.consumo = new Consumo();
+        this.enEncontrado = false;
         this.habilitaFormConsumos = false;
         this.habilitaFormEquipaje = false;
+    }
+
+    public void cambiarFiltro() {
+        this.enBusquedaPorReserva = !this.enBusquedaPorReserva;
     }
 
     @Override
@@ -84,36 +99,67 @@ public class checkOutBean extends BaseBean implements Serializable {
         super.agregar();
 
     }
-    
-    public void buscar(String identificacion) {
-        this.cliente = this.clienteService.obtenerPorIdentificacion(identificacion);
-        if (cliente != null) {
-            enEncontrado = true;
-            this.checkOuts = this.checkOutService.obtenerPorCliente(cliente);
+
+    public void buscar() {
+        this.reserva = new Reserva();
+        this.reservas.clear();
+        if (enBusquedaPorReserva) {
+            this.reserva = this.reservaService.obtenerPorIdentificacion(auxBusqueda);
+            if (reserva != null) {
+                enEncontrado = true;
+                this.reservas = this.reservaService.obtenerPorCliente(cliente);
+                this.reservas.add(this.reserva);
+            } else {
+                FacesUtil.addMessageInfo("No se encontro reserva, verifar el codigo de reserva");
+            }
         } else {
-            FacesUtil.addMessageInfo("No se encontro cliente, verifique la identificacion");
+            this.cliente = this.clienteService.obtenerPorIdentificacion(auxBusqueda);
+            if (cliente != null) {
+                enEncontrado = true;
+                this.reservas = this.reservaService.obtenerPorCliente(cliente);
+            } else {
+                FacesUtil.addMessageInfo("No se encontro cliente, verifique la identificacion");
+            }
         }
     }
-    
-     public void mostrarConsumos() {
-        //this.actividades = this.actividadService.obtenerPorProgramaCliente(this.programaSel);
+
+    public void mostrarConsumos() {
+        this.consumos = this.consumoService.buscarPorReserva(reservaSel);
+        System.out.println(consumos.get(0));
         this.habilitaFormConsumos = true;
     }
-     
-     public void mostrarEquipaje() {
+
+    public void mostrarEquipaje() {
+        this.turistas = this.turistaService.obtenerPorReserva(reserva.getCodigo());
         this.habilitaFormEquipaje = true;
     }
-     
+
     public void facturar() {
         //para mandar parametros al programa de factura
     }
 
-    public String getIdentificacionCliente() {
-        return identificacionCliente;
+    public String getFiltro() {
+        return filtro;
     }
 
-    public void setIdentificacionCliente(String identificacionCliente) {
-        this.identificacionCliente = identificacionCliente;
+    public void setFiltro(String filtro) {
+        this.filtro = filtro;
+    }
+
+    public Reserva getReservaSel() {
+        return reservaSel;
+    }
+
+    public void setReservaSel(Reserva reservaSel) {
+        this.reservaSel = reservaSel;
+    }
+
+    public String getAuxBusqueda() {
+        return auxBusqueda;
+    }
+
+    public void setAuxBusqueda(String auxBusqueda) {
+        this.auxBusqueda = auxBusqueda;
     }
 
     public List<CheckOut> getCheckOuts() {
@@ -212,14 +258,6 @@ public class checkOutBean extends BaseBean implements Serializable {
         this.consumo = consumo;
     }
 
-    public boolean isEnEncontrado() {
-        return enEncontrado;
-    }
-
-    public void setEnEncontrado(boolean enEncontrado) {
-        this.enEncontrado = enEncontrado;
-    }
-
     public boolean isHabilitaFormConsumos() {
         return habilitaFormConsumos;
     }
@@ -236,5 +274,28 @@ public class checkOutBean extends BaseBean implements Serializable {
         this.habilitaFormEquipaje = habilitaFormEquipaje;
     }
 
-     
+    public boolean isEnBusquedaPorReserva() {
+        return enBusquedaPorReserva;
+    }
+
+    public void setEnBusquedaPorReserva(boolean enBusquedaPorReserva) {
+        this.enBusquedaPorReserva = enBusquedaPorReserva;
+    }
+
+    public boolean isEnEncontrado() {
+        return enEncontrado;
+    }
+
+    public void setEnEncontrado(boolean enEncontrado) {
+        this.enEncontrado = enEncontrado;
+    }
+
+    public List<TuristaReserva> getTuristas() {
+        return turistas;
+    }
+
+    public void setTuristas(List<TuristaReserva> turistas) {
+        this.turistas = turistas;
+    }
+
 }

@@ -27,9 +27,9 @@ public class ReservaDAO extends BasicDAO<Reserva, ObjectId>{
         super(objectEntity, ds);
     }
     
-    public List<Reserva> findByCliente(Cliente identificacion){
+    public List<Reserva> findByCliente(Cliente cliente){
         Query<Reserva> qry = getDatastore().createQuery(Reserva.class);
-        qry.criteria("identificacion").equal(identificacion);
+        qry.criteria("cliente").equal(cliente);
         return qry.asList();
     }
     

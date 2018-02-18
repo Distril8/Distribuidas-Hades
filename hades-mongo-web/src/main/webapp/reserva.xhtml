@@ -101,7 +101,6 @@
                         <p:column headerText="Tipo Camarote">
                             <h:outputText value="#{camarote.nomTipo}" />
                         </p:column>
-
                     </p:dataTable>
                 </p:panel>
                 <p:panel id="datosPnl" header="Adicionales" rendered="#{reservaBean.enEncontrado}">
@@ -114,6 +113,11 @@
                         <p:inputText id="valorFinal" value="#{reservaBean.reserva.valorFinal}"  required="true" requiredMessage="Debe ingresara el valor Final"/>
                         <p:outputLabel for="fecha" value="Fecha Emision" />
                         <p:calendar id="fecha" value="#{reservaBean.reserva.fechaEmision}" showOn="button" />
+                        <p:outputLabel for="estadoResCmb" value="Estado" />
+                        <p:selectOneMenu id="estadoResCmb" value="#{reservaBean.reserva.estado}" required="true">
+                            <f:selectItem itemLabel="PRE-RESERVA" itemValue="PRE" />
+                            <f:selectItem itemLabel="RESERVADO" itemValue="RES" />
+                        </p:selectOneMenu>
                     </p:panelGrid>
                     <p:commandButton value="Seleccionar" actionListener="#{reservaBean.guardar()}" update="@form"/>
                 </p:panel>

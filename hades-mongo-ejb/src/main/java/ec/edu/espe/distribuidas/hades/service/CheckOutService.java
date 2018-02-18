@@ -43,10 +43,6 @@ public class CheckOutService {
         CheckOut aux = this.checkOutDAO.get(new ObjectId(checkOut.getId()));
         return aux;
     }
-    
-    public List<CheckOut> obtenerPorCliente(Cliente cliente) {
-        return this.checkOutDAO.findByCliente(cliente);
-    }
 
     public void crear(CheckOut checkOut) {
         this.checkOutDAO.save(checkOut);
