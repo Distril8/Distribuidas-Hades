@@ -15,7 +15,8 @@ public enum EstadoReservaEnum {
     
     PRE("PRE-RESERVA"),
     RES("RESERVADO"),
-    ANU("ANULADO");
+    ANU("ANULADO"),
+    CKO("CHECK-OUT");
 
     String texto;
 

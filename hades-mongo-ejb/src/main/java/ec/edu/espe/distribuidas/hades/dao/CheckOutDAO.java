@@ -23,10 +23,18 @@ public class CheckOutDAO  extends BasicDAO<CheckOut, ObjectId> {
         super(objectEntity, ds);
     }
     
-    public List<CheckOut> findByCliente(Cliente cliente){
-        Query<CheckOut> q = getDatastore().createQuery(CheckOut.class);
-        q.criteria("cliente").equal(cliente);
-        return q.asList();
-    }
-    
+//    public List<CheckOut> findByCliente(Cliente cliente){
+//        Query<CheckOut> q = getDatastore().createQuery(CheckOut.class);
+//        q.criteria("cliente").equal(cliente);
+//        return q.asList();
+//    }
+//    
+//    public CheckOut findByReserva(Reserva Reserva){
+//        Query<CheckOut> q = getDatastore().createQuery(CheckOut.class);
+//        q.criteria("reserva").equal(reserva);
+//         if(q.asList().size()>0)
+//            return q.asList().get(0);
+//        else
+//            return null;
+//    }
 }

@@ -38,7 +38,7 @@ public class ConsumoService {
     public List<Consumo> obtenerTodos() {
         return this.consumoDAO.find().asList();
     }
-
+    
     public void crear(Consumo consumo) {
         List<Consumo> aux = this.consumoDAO.find().asList();
         Integer codigo;
@@ -63,11 +63,11 @@ public class ConsumoService {
         Consumo consumo = this.consumoDAO.findOne("codigo", codigo);
         this.consumoDAO.delete(consumo);
     }
-    
+
     public List<Consumo> obtenerPorCodigo(Consumo codigo) {
         return this.consumoDAO.findByCodigoConsumo(codigo);
     }
-    
+
     public List<Consumo> buscarPorReserva(Reserva reservaBusqueda) {
         return this.consumoDAO.findByReserva(reservaBusqueda);
     }
