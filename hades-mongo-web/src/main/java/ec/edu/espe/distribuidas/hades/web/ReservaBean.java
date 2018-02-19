@@ -158,6 +158,13 @@ public class ReservaBean extends BaseBean implements Serializable {
             this.reserva.setCliente(this.cliente);
             this.reserva.setCamarote(camaroteSel);
             this.reservaService.crear(this.reserva);
+            System.out.println("Cliente: ");
+            System.out.println("Nombre"+this.reserva.getCliente().getNombre());
+            System.out.println("Apelldio"+this.reserva.getCliente().getNombre());
+            System.out.println("Reserva codigo: "+this.reserva.getCodigo());
+            System.out.println("TOur: "+this.reserva.getTour().getNombre());
+            System.out.println("Valor a pagar: "+this.reserva.getValorFinal());
+            System.out.println("Fecha emision: "+this.reserva.getFechaEmision());
             FacesUtil.addMessageInfo("Se agrego la reserva del cliente: " + this.cliente.getNombre());
         } catch (Exception e) {
             FacesUtil.addMessageError(null, "Ocurrí\u00f3 un error al actualizar la informaci\u00f3n");

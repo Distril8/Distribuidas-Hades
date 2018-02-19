@@ -21,6 +21,7 @@ import ec.edu.espe.distribuidas.hades.service.TourService;
 import ec.edu.espe.distribuidas.hades.service.TuristaReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -136,6 +137,23 @@ public class checkOutBean extends BaseBean implements Serializable {
 
     public void facturar() {
         //para mandar parametros al programa de factura
+        BigDecimal totalConsumos= new BigDecimal(0.0);
+        BigDecimal totalEquipaje = new BigDecimal(0.0);
+        this.checkOut.setReserva(this.reserva);
+        System.out.println("COdigo reserva: "+this.checkOut.getReserva().getCodigo());
+        System.out.println(this.checkOut.getCliente());
+        this.consumos = this.consumoService.buscarPorReserva(reservaSel);
+        this.turistas = this.turistaService.obtenerPorReserva(reserva.getCodigo());
+        for (Consumo consumo1 : consumos) {
+            totalConsumos.add(consumo1.getValor());
+        }
+        this.checkOut.setTotalConsumos(totalConsumos);
+        for (TuristaReserva turista1 : turistas) {
+            totalConsumos.add(turista1.getValorMaleta());
+        }
+        this.checkOut.setTotalEquipaje(totalEquipaje);
+        System.out.println("total consumos: "+this.checkOut.getTotalConsumos());
+        System.out.println("total equipjae: "+this.checkOut.getTotalEquipaje());
     }
 
     public String getFiltro() {
