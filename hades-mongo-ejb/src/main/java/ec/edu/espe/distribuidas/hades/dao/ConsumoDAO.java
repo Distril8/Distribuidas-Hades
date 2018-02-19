@@ -35,4 +35,6 @@ public class ConsumoDAO extends BasicDAO<Consumo, ObjectId> {
         return qry.asList();
 
     }
+    
+   
 }
