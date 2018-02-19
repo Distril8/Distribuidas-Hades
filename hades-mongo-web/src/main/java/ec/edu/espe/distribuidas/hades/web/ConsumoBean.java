@@ -7,9 +7,12 @@
  */
 package ec.edu.espe.distribuidas.hades.web;
 
+import ec.edu.espe.distribuidas.hades.enums.TipoMenuEnum;
+import ec.edu.espe.distribuidas.hades.model.Cliente;
 import ec.edu.espe.distribuidas.hades.model.Consumo;
 import ec.edu.espe.distribuidas.hades.model.Menu;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
+import ec.edu.espe.distribuidas.hades.service.ClienteService;
 import ec.edu.espe.distribuidas.hades.service.ConsumoService;
 import ec.edu.espe.distribuidas.hades.service.MenuService;
 import ec.edu.espe.distribuidas.hades.service.ReservaService;
@@ -37,6 +40,9 @@ public class ConsumoBean extends BaseBean implements Serializable {
     private boolean enReservaElegido;
     private Menu menu;
     private Menu menuSel;
+    private boolean enBusquedaPorReserva;
+    private Cliente cliente;
+     private boolean enEncontrado;
 
     private List<Consumo> consumos;
     private List<Menu> menus;
@@ -46,6 +52,7 @@ public class ConsumoBean extends BaseBean implements Serializable {
     private Reserva reserva;
     private List<Reserva> reservas;
     private String auxBusqueda;
+    private String tipoBusqueda;
 
     @Inject
     private ConsumoService consumoService;
@@ -53,30 +60,55 @@ public class ConsumoBean extends BaseBean implements Serializable {
     private ReservaService reservaService;
      @Inject
     private MenuService menuService;
+     
+     @Inject
+    private ClienteService clienteService;
 
     @PostConstruct
     public void init() {
-        this.filtro = "TIP";
+        this.filtro = "RES";
         this.enBusquedaPorTipo = true;
+        this.enBusquedaPorReserva = true;
+        
         this.consumos = this.consumoService.obtenerTodos();
         this.consumo = new Consumo();
         this.reservas = this.reservaService.obtenerTodos();
         this.menus = this.menuService.obtenerTodos();
         this.enReservaElegido = false;
+        this.enEncontrado = false;
 
     }
 
+//    public void cambiarFiltro() {
+//        this.enBusquedaPorTipo = !this.enBusquedaPorTipo;
+//        System.out.println("Valor para enbusqueda: " + this.enBusquedaPorTipo);
+//    }
+    
     public void cambiarFiltro() {
-        this.enBusquedaPorTipo = !this.enBusquedaPorTipo;
-        System.out.println("Valor para enbusqueda: " + this.enBusquedaPorTipo);
+        this.enBusquedaPorReserva = !this.enBusquedaPorReserva;
     }
 
     public void buscar() {
-
-        Reserva reserva = new Reserva();
-        reserva.setCodigo(this.reservaBusqueda);
-        this.consumos = this.consumoService.buscarPorReserva(recuperaReserva(reserva));
-
+        this.reserva = new Reserva();
+        this.reservas.clear();
+        if (enBusquedaPorReserva) {
+            this.reserva = this.reservaService.obtenerPorIdentificacion(auxBusqueda);
+            if (reserva != null) {
+                enEncontrado = true;
+                this.reservas = this.reservaService.obtenerPorCliente(cliente);
+                this.reservas.add(this.reserva);
+            } else {
+                FacesUtil.addMessageInfo("No se encontro reserva, verifar el codigo de reserva");
+            }
+        } else {
+            this.cliente = this.clienteService.obtenerPorIdentificacion(auxBusqueda);
+            if (cliente != null) {
+                enEncontrado = true;
+                this.reservas = this.reservaService.obtenerPorCliente(cliente);
+            } else {
+                FacesUtil.addMessageInfo("No se encontro cliente, verifique la identificacion");
+            }
+        }
     }
 
     @Override
@@ -91,6 +123,11 @@ public class ConsumoBean extends BaseBean implements Serializable {
         this.consumo = new Consumo();
         this.reservas = this.reservaService.obtenerTodos();
 
+    }
+    
+    public void buscarMenu(){
+        this.menus = this.menuService.obtenerPorTipo(tipoBusqueda);
+        
     }
     
     public void buscarR(){
@@ -134,9 +171,9 @@ public class ConsumoBean extends BaseBean implements Serializable {
     public void guardar() {
         try {
 
-            //consumo.setReserva(retornaReserva(this.consumo));
+            
             this.consumo.setCodigo(consumos.size() + 1);
-            //this.consumo.setMenu(this.menu);
+            
             this.consumo.setFecha(fecha());
             this.consumoService.crear(this.consumo);
             FacesUtil.addMessageInfo("Se agrego el Consumo de valor: " + this.consumo.getValor());
@@ -148,9 +185,9 @@ public class ConsumoBean extends BaseBean implements Serializable {
         super.reset();
         this.consumo = new Consumo();
         this.menu = new Menu();
-        this.reserva = new Reserva();
-        this.menus = this.menuService.obtenerTodos();
-        this.reservas = this.reservaService.obtenerTodos();
+        //this.reserva = new Reserva();
+       // this.menus = this.menuService.obtenerTodos();
+       // this.reservas = this.reservaService.obtenerTodos();
         
 
     }
@@ -322,7 +359,41 @@ public class ConsumoBean extends BaseBean implements Serializable {
         return fecha;
     }
 
-    
+    public boolean isEnBusquedaPorReserva() {
+        return enBusquedaPorReserva;
+    }
+
+    public void setEnBusquedaPorReserva(boolean enBusquedaPorReserva) {
+        this.enBusquedaPorReserva = enBusquedaPorReserva;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public boolean isEnEncontrado() {
+        return enEncontrado;
+    }
+
+    public void setEnEncontrado(boolean enEncontrado) {
+        this.enEncontrado = enEncontrado;
+    }
+
+    public String getTipoBusqueda() {
+        return tipoBusqueda;
+    }
+
+    public void setTipoBusqueda(String tipoBusqueda) {
+        this.tipoBusqueda = tipoBusqueda;
+    }
+
+    public TipoMenuEnum[] getTiposMenu() {
+        return TipoMenuEnum.values();
+    }
     
 
     

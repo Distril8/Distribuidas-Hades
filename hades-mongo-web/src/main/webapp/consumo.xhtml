@@ -9,17 +9,22 @@
     <ui:composition template="/templates/plantilla.xhtml">
         <ui:define name="contenido">
             <p:panel id="mainPnl" header="Registre su Consumo" style="width: 80%; margin: auto;">
-                 <p:panel id="buscPnl" header="B&#250;squeda">
+                <p:panel id="buscPnl" header="B&#250;squeda">
                     <p:panelGrid columns="2" style="margin-top:10px">
-                        <p:outputLabel  value="C&#243;digo Reserva" />
-                        <p:inputText  value="#{consumoBean.auxBusqueda}"/>
+                        <p:selectOneMenu id="filtroCmb" value="#{consumoBean.filtro}" required="true"  valueChangeListener="#{consumoBean.cambiarFiltro()}" >
+                            <p:ajax update="@form"/>
+                            <f:selectItem itemLabel="Codigo Reserva" itemValue="RES" />
+                            <f:selectItem itemLabel="Identificacion Cliente" itemValue="CLI" />
+                        </p:selectOneMenu>
+                        <p:inputText id="buscTxt" value="#{consumoBean.auxBusqueda}" required="true" />
                     </p:panelGrid>
-                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{consumoBean.buscarR()}" update="@form" />
-                
+                    <p:commandButton id="buscarCmd" value="Buscar" actionListener="#{consumoBean.buscar()}" update="@form" />
+                </p:panel>
+                <p:panel id="mostrPnl1" header="Reservas" rendered="#{consumoBean.enEncontrado}" style="height: auto" >
                 <p:dataTable id="toursTbl" var="reserva" value="#{consumoBean.reservas}"
                              selectionMode="single" selection="#{consumoBean.reservaSel}" rowKey="#{reserva.codigo}">
-                    <p:ajax event="rowSelect" update="@form" />
-                    <p:ajax event="rowUnselect" update="@form" />
+                    <p:ajax event="rowSelect"  />
+                    <p:ajax event="rowUnselect"  />
                     <p:column headerText="C&#243;digo de Reserva">
                         <h:outputText value="#{reserva.codigo}" />
                     </p:column>
@@ -29,15 +34,23 @@
                     <p:column headerText="Identificacion">
                         <h:outputText value="#{reserva.cliente.identificacion}" />
                     </p:column>
-                    <p:column headerText="Consumos">
-                        
-                    </p:column>
+                    
                 </p:dataTable>
                 
-                <p:commandButton value="Seleccionar" actionListener="#{consumoBean.elegirReserva()}" update="@form"/>
+                <p:commandButton value="Seleccionar" actionListener="#{consumoBean.elegirReserva()}" />
                 </p:panel>
-                <p:panel header="Agregar Consumo" rendered="#{consumoBean.enReservaElegido}">
-                   
+               
+                <p:panel header="Agregar Consumo" >
+                    
+                    <p:panel id="buscPnl1" header="Buscar Tipo de Menu">
+                    <p:panelGrid columns="1" style="margin-top:10px">
+                    <p:selectOneMenu value="#{consumoBean.tipoBusqueda}" >
+                        <f:selectItems id="tipo" value="#{consumoBean.tiposMenu}" var="tipoMenu" itemValue="#{tipoMenu}" itemLabel="#{tipoMenu.texto}"  />                          
+                    <p:ajax update="@form"/>   
+                    </p:selectOneMenu>
+                         </p:panelGrid>
+                    <p:commandButton id="buscarCmd2" value="Buscar" actionListener="#{consumoBean.buscarMenu()}" update="@form" />
+                </p:panel>
                     <p:dataGrid var="menu" value="#{consumoBean.menus}" columns="3" layout="grid"
                             rows="12" paginator="true" id="menuGrd"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -47,7 +60,7 @@
                     </f:facet>
                     <p:panel header="#{menu.nombre}" style="text-align:center">
                         <h:panelGrid columns="1" style="width:100%">
-                            <p:graphicImage value="/menu/#{menu.imagen}.png" height="124px"/> 
+                            <p:graphicImage value="/menu/#{menu.imagen1}.png" height="124px"/> 
                             <h:outputText value="#{menu.descripcion}" />
                             <h:outputText value="#{menu.precio}" >
                             <f:convertNumber minFractionDigits="2" maxFractionDigits="2" currencySymbol="$"/>
@@ -57,9 +70,10 @@
                                 <f:setPropertyActionListener value="#{menu}" target="#{consumoBean.menuSel}" />
                             </p:commandLink>
                         </h:panelGrid>
+                   
+                   
                     </p:panel>
-                    
-                </p:dataGrid>
+                              </p:dataGrid>
                 <p:dialog header="Producto Info" widgetVar="productoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                     <p:outputPanel id="productoDetail" style="text-align:center;">
                         <p:panelGrid  columns="2" rendered="#{not empty consumoBean.menuSel}" columnClasses="label,value"  >
@@ -83,11 +97,17 @@
                     </p:outputPanel>
                 </p:dialog>
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-                    <p:commandButton value="Guardar" actionListener="#{consumoBean.guardar}" update="@form" immediate="true"/>
+                     <p:commandButton value="Guardar" actionListener="#{consumoBean.guardar}"  immediate="true"/>
                     <p:commandButton value="Cancelar" actionListener="#{consumoBean.cancelar}" update="@form" immediate="true"/>
+               
                 </p:panel>
+              
+                
             </p:panel>
-            
+             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
         </ui:define>
     </ui:composition>
 </html>

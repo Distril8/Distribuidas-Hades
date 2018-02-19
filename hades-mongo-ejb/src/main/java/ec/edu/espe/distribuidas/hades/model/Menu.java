@@ -6,7 +6,7 @@
  * 2017 (c) Hades Cruise Corp.
  */
 package ec.edu.espe.distribuidas.hades.model;
-import ec.edu.espe.distribuidas.hades.enums.MenuEnum;
+import ec.edu.espe.distribuidas.hades.enums.TipoMenuEnum;
 import ec.edu.espe.distribuidas.nosql.mongo.BaseEntity;
 import java.math.BigDecimal;
 import org.mongodb.morphia.annotations.Entity;
@@ -23,10 +23,11 @@ public class Menu extends BaseEntity {
     @Indexed(options = @IndexOptions(name = "menu_codigoUIdx", unique = true))
     private Integer codigo;
     private String nombre;
-    private String imagen;
+    private byte[] imagen;
     private String descripcion;
     private BigDecimal precio;
-    private MenuEnum tipo;
+    private TipoMenuEnum tipo;
+    private String imagen1;
 
     public Menu() {
     }
@@ -35,14 +36,18 @@ public class Menu extends BaseEntity {
         this.codigo = codigo;
     }
 
-    public String getImagen() {
+    public byte[] getImagen() {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
+    public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
-    
+
+   
+
+  
+   
 
     public Integer getCodigo() {
         return codigo;
@@ -76,13 +81,24 @@ public class Menu extends BaseEntity {
         this.precio = precio;
     }
 
-    public MenuEnum getTipo() {
+    public TipoMenuEnum getTipo() {
         return tipo;
     }
 
-    public void setTipo(MenuEnum tipo) {
+    public void setTipo(TipoMenuEnum tipo) {
         this.tipo = tipo;
     }
+
+    public String getImagen1() {
+        return imagen1;
+    }
+
+    public void setImagen1(String imagen1) {
+        this.imagen1 = imagen1;
+    }
+    
+    
+    
 
     @Override
     public int hashCode() {

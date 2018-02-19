@@ -42,9 +42,10 @@ public class MenuService {
         return this.menuDao.findOne("codigo", codigo);
     }
     
-    public Menu obtenerPorTipo(String tipo) {
-        return this.menuDao.findOne("tipo", tipo);
+    public List<Menu> obtenerPorTipo(String TipoBusqueda) {
+        return this.menuDao.findByTipo(TipoBusqueda);
     }
+    
 
     public void crear(Menu menu) {
         List<Menu> aux = this.menuDao.find().asList();
