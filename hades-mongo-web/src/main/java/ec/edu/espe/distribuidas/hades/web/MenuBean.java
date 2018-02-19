@@ -7,20 +7,21 @@
  */
 package ec.edu.espe.distribuidas.hades.web;
 
-import ec.edu.espe.distribuidas.hades.enums.MenuEnum;
+import ec.edu.espe.distribuidas.hades.enums.TipoMenuEnum;
 import ec.edu.espe.distribuidas.hades.model.Consumo;
 import ec.edu.espe.distribuidas.hades.model.Menu;
 import ec.edu.espe.distribuidas.hades.model.Reserva;
 import ec.edu.espe.distribuidas.hades.service.ConsumoService;
 import ec.edu.espe.distribuidas.hades.service.MenuService;
-import ec.edu.espe.distribuidas.hades.service.ReservaService;
 import ec.edu.espe.distribuidas.hades.web.util.FacesUtil;
+import ec.edu.espe.distribuidas.hades.web.util.UtiLjsf;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -38,7 +39,8 @@ public class MenuBean extends BaseBean implements Serializable {
     private Menu itemMenu;
     private Menu itemMenuSel;
     private String menuBusqueda;
-    
+    private String imagen;
+ 
     @Inject
     private MenuService menuService;
     
@@ -88,6 +90,15 @@ public class MenuBean extends BaseBean implements Serializable {
         } catch (Exception e) {
             FacesUtil.addMessageError(null, "No se puede eliminar el registro seleccionado. Verifique que no tenga informacion relacionada.");
         }
+    }
+    
+    public void subirImagen(FileUploadEvent event){
+       try{
+        this.itemMenu.setImagen(event.getFile().getContents());
+        imagen = UtiLjsf.guardaBlobEnFicheroTemporal(this.itemMenu.getImagen(), event.getFile().getFileName());
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
     }
 
     @Override
@@ -147,8 +158,8 @@ public class MenuBean extends BaseBean implements Serializable {
 
 
     
-    public MenuEnum[] getTiposMenu(){
-        return MenuEnum.values();
+    public TipoMenuEnum[] getTiposMenu(){
+        return TipoMenuEnum.values();
     }
 
     public Menu getItemMenu() {
@@ -206,6 +217,14 @@ public class MenuBean extends BaseBean implements Serializable {
     public void setMenuBusqueda(String menuBusqueda) {
         this.menuBusqueda = menuBusqueda;
     }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
     
-  
+
 }

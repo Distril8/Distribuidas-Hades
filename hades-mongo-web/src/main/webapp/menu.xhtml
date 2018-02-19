@@ -5,9 +5,11 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="/templates/plantilla.xhtml">
         <ui:define name="contenido">
+           
             <p:panel id="mainPnl" header="Men&#250;" style="width: 50%; margin: auto;">
                 <p:dataTable var="itemMenu" value="#{menuBean.itemsMenu}" 
                              selectionMode="single" selection="#{menuBean.itemMenuSel}" rowKey="#{itemMenu.codigo}">
@@ -49,6 +51,10 @@
                         <h:selectOneMenu value="#{menuBean.itemMenu.tipo}" style="background-color: black" >
                             <f:selectItems id="tipo" value="#{menuBean.tiposMenu}" var="tipoMenu" itemValue="#{tipoMenu}" itemLabel="#{tipoMenu.texto}"  />                          
                         </h:selectOneMenu>
+                        <h:panelGroup>
+                            <p:fileUpload id="filIma" mode="single" fileUploadListener="#{menuBean.subirImagen}" allowTypes="/(|.|\/)(gif|jpe?g|png)$/" cancelLabel="Cancelar" uploadLabel="Subir Imagen" label="Elegir" update="imagen"/>
+                            <p:graphicImage id="imagen" value="#{menuBean.itemMenu.imagen}"/>
+                        </h:panelGroup>
                     </p:panelGrid>
                     <p:commandButton value="Aceptar" actionListener="#{menuBean.guardar}" update="@form" />
                     <p:commandButton value="Cancelar" actionListener="#{menuBean.cancelar}" update="@form" />
@@ -58,6 +64,7 @@
                 <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
+           
         </ui:define>
     </ui:composition>
 </html>
