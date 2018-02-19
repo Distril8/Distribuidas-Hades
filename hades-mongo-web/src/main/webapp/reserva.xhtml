@@ -86,7 +86,7 @@
                 </p:panel>
                 <p:panel id="camarotePnl" header="Camarotes" rendered="#{reservaBean.enEncontrado}">
                     <p:dataTable id="camarotesTbl" var="camarote" value="#{reservaBean.camarotes}"
-                                 selectionMode="multiple" selection="#{reservaBean.camarotesSel}" rowKey="#{camarote.codigo}">
+                                 selectionMode="single" selection="#{reservaBean.camaroteSel}" rowKey="#{camarote.codigo}">
                         <p:ajax event="rowSelect" update="@form" />
                         <p:ajax event="rowUnselect" update="@form" />
                         <p:column headerText="Numero">
