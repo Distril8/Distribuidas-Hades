@@ -60,7 +60,7 @@ public class ReservaBean extends BaseBean implements Serializable {
     private Camarote camarote;
     private TipoAlimentacion alimentacionSel;
     private Reserva reservaSel;
-    private Camarote camarotesSel;
+    private Camarote camaroteSel;
 
     private List<Tour> tours;
     private List<TipoTour> tiposTours;
@@ -126,6 +126,7 @@ public class ReservaBean extends BaseBean implements Serializable {
         if (cliente != null) {
             enEncontrado = true;
             this.camarotes= this.camaroteService.obtenerPorCrucero(this.tourSel.getCrucero());
+            System.out.println(camarotes);
         } else {
             FacesUtil.addMessageInfo("No se encontro cliente, verifique la identificacion");
         }
@@ -155,7 +156,7 @@ public class ReservaBean extends BaseBean implements Serializable {
             this.reserva.setCodigo(generarCodigo());
             this.reserva.setTipoAlimentacion(this.tipoAlimentacionService.obtenerPorCodigo(this.codTipoAlimentacion));
             this.reserva.setCliente(this.cliente);
-            System.out.println(this.reserva);
+            this.reserva.setCamarote(camaroteSel);
             this.reservaService.crear(this.reserva);
             FacesUtil.addMessageInfo("Se agrego la reserva del cliente: " + this.cliente.getNombre());
         } catch (Exception e) {
@@ -222,12 +223,12 @@ public class ReservaBean extends BaseBean implements Serializable {
         this.camarote = camarote;
     }
 
-    public Camarote getCamarotesSel() {
-        return camarotesSel;
+    public Camarote getCamaroteSel() {
+        return camaroteSel;
     }
 
-    public void setCamarotesSel(Camarote camarotesSel) {
-        this.camarotesSel = camarotesSel;
+    public void setCamaroteSel(Camarote camaroteSel) {
+        this.camaroteSel = camaroteSel;
     }
 
     public List<Camarote> getCamarotes() {
