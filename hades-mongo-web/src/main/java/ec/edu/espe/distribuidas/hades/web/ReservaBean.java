@@ -60,8 +60,8 @@ public class ReservaBean extends BaseBean implements Serializable {
     private Camarote camarote;
     private TipoAlimentacion alimentacionSel;
     private Reserva reservaSel;
-    
-    private List<Camarote> camarotesSel;
+    private Camarote camarotesSel;
+
     private List<Tour> tours;
     private List<TipoTour> tiposTours;
     private List<Crucero> cruceros;
@@ -222,11 +222,11 @@ public class ReservaBean extends BaseBean implements Serializable {
         this.camarote = camarote;
     }
 
-    public List<Camarote> getCamarotesSel() {
+    public Camarote getCamarotesSel() {
         return camarotesSel;
     }
 
-    public void setCamarotesSel(List<Camarote> camarotesSel) {
+    public void setCamarotesSel(Camarote camarotesSel) {
         this.camarotesSel = camarotesSel;
     }
 
